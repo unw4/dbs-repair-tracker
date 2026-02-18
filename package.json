@@ -11,20 +11,17 @@
     "start": "next start"
   },
   "dependencies": {
-    "@prisma/adapter-better-sqlite3": "^7.4.0",
-    "@prisma/client": "^7.4.0",
+    "@prisma/client": "^5.22.0",
     "@types/bcryptjs": "^2.4.6",
     "bcryptjs": "^3.0.3",
-    "better-sqlite3": "^12.6.2",
     "iron-session": "^8.0.4",
     "next": "16.1.6",
-    "prisma": "^7.4.0",
+    "prisma": "^5.22.0",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
