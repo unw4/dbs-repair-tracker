@@ -13,6 +13,7 @@ import {
 import NewTicketForm from "./NewTicketForm";
 import StatusSelect from "./StatusSelect";
 import SearchBar from "./SearchBar";
+import EditTicketModal from "./EditTicketModal";
 import type { ReactNode } from "react";
 
 const STATUS_COLORS: Record<string, string> = {
@@ -150,6 +151,9 @@ export default async function AdminPage({
                     <th className="text-left px-4 py-2 font-bold uppercase text-xs tracking-wider text-brand-dark">
                       Takip
                     </th>
+                    <th className="text-left px-4 py-2 font-bold uppercase text-xs tracking-wider text-brand-dark">
+                      Düzenle
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -207,6 +211,16 @@ export default async function AdminPage({
                         >
                           /track/{ticket.id.slice(0, 8)}…
                         </a>
+                      </td>
+                      <td className="px-4 py-3">
+                        <EditTicketModal
+                          id={ticket.id}
+                          customerName={ticket.customerName}
+                          deviceModel={ticket.deviceModel}
+                          jobType={ticket.jobType}
+                          phone={ticket.phone}
+                          notes={ticket.notes}
+                        />
                       </td>
                     </tr>
                   ))}
