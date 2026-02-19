@@ -43,6 +43,11 @@ export async function updateTicket(
   revalidatePath("/admin");
 }
 
+export async function deleteTicket(id: string) {
+  await prisma.ticket.delete({ where: { id } });
+  revalidatePath("/admin");
+}
+
 export async function getTicketByUuid(id: string) {
   return prisma.ticket.findUnique({ where: { id } });
 }

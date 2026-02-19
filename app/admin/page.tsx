@@ -14,6 +14,7 @@ import NewTicketForm from "./NewTicketForm";
 import StatusSelect from "./StatusSelect";
 import SearchBar from "./SearchBar";
 import EditTicketModal from "./EditTicketModal";
+import DeleteTicketButton from "./DeleteTicketButton";
 import type { ReactNode } from "react";
 
 const STATUS_COLORS: Record<string, string> = {
@@ -154,6 +155,7 @@ export default async function AdminPage({
                     <th className="text-left px-4 py-2 font-bold uppercase text-xs tracking-wider text-brand-dark">
                       Düzenle
                     </th>
+                    <th className="px-4 py-2"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -221,6 +223,9 @@ export default async function AdminPage({
                           phone={ticket.phone}
                           notes={ticket.notes}
                         />
+                      </td>
+                      <td className="px-4 py-3">
+                        <DeleteTicketButton id={ticket.id} />
                       </td>
                     </tr>
                   ))}
