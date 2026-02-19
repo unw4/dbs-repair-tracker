@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "./prisma";
+import { sendTrackingMessage } from "./whatsapp";
 
 export async function createTicket(
   customerName: string,
@@ -10,9 +11,12 @@ export async function createTicket(
   phone?: string,
   notes?: string
 ) {
-  await prisma.ticket.create({
+  const ticket = await prisma.ticket.create({
     data: { customerName, deviceModel, jobType, phone, notes },
   });
+  if (phone) {
+    await sendTrackingMessage(phone, ticket.id);
+  }
   revalidatePath("/admin");
 }
 
