@@ -18,7 +18,7 @@ export async function sendTrackingMessage(phone: string, ticketId: string) {
     `Bu link üzerinden tamir durumunuzu anlık takip edebilirsiniz.\n` +
     `— Denizli Bilgisayar Sistemleri`;
 
-  await fetch(
+  const res = await fetch(
     `https://graph.facebook.com/v21.0/${phoneNumberId}/messages`,
     {
       method: "POST",
@@ -34,4 +34,7 @@ export async function sendTrackingMessage(phone: string, ticketId: string) {
       }),
     }
   );
+
+  const json = await res.json();
+  console.log("[WhatsApp]", JSON.stringify(json));
 }
