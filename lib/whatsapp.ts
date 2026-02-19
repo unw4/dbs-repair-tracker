@@ -50,7 +50,7 @@ export async function sendReadyMessage(phone: string, ticketId: string) {
 
   const trackingUrl = `${appUrl}/track/${ticketId}`;
   const body =
-    `Merhaba! Cihazınız servisten çıkmış ve teslime hazır durumdadır. 🎉\n\n` +
+    `Merhaba! Cihazınız servisten çıkmış ve teslime hazır durumdadır. ✓\n\n` +
     `Takip linkiniz: ${trackingUrl}\n\n` +
     `Cihazınızı mesai saatlerimiz içinde teslim alabilirsiniz.\n` +
     `— Denizli Bilgisayar Sistemleri`;
