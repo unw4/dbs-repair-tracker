@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-dark:   #0D3A6E;
-  --color-brand-hover:  #1A5A9E;
+  --color-brand-dark:   #1a4a8a;
+  --color-brand-hover:  #2560af;
   --color-brand:        #63B8FF;
   --color-brand-muted:  #5A9ECC;
   --color-brand-border: #B8DEFF;
@@ -11,13 +11,15 @@
 }
 
 :root {
-  --background: #ffffff;
+  --background: #F8FAFC;
   --foreground: #0D3A6E;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas,
-    "DejaVu Sans Mono", monospace;
+  font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

@@ -44,62 +44,62 @@ export default function EditTicketModal({
     <>
       <button
         onClick={() => setOpen(true)}
-        className="text-xs font-bold uppercase tracking-wider text-brand-hover hover:text-brand-dark underline hover:no-underline"
+        className="text-xs font-semibold text-brand-muted hover:text-brand-dark transition-colors underline underline-offset-2 hover:no-underline"
       >
         Düzenle
       </button>
 
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-          onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setOpen(false);
+          }}
         >
-          <div className="bg-white border-2 border-brand-dark w-full max-w-lg mx-4">
-            <div className="bg-brand-dark text-white px-4 py-3 flex items-center justify-between">
-              <span className="font-bold uppercase tracking-widest text-sm">
-                Formu Düzenle
-              </span>
+          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 w-full max-w-lg mx-4 overflow-hidden">
+            <div className="bg-brand-dark text-white px-5 py-4 flex items-center justify-between">
+              <span className="font-semibold text-sm">Formu Düzenle</span>
               <button
                 onClick={() => setOpen(false)}
-                className="text-brand-border hover:text-white transition-colors text-lg leading-none"
+                className="text-brand-border hover:text-white transition-colors text-xl leading-none"
               >
-                ✕
+                ×
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-4">
+            <form onSubmit={handleSubmit} className="p-5">
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="block text-xs font-bold uppercase mb-1 tracking-wider text-brand-dark">
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
                     Müşteri Adı
                   </label>
                   <input
                     name="customerName"
                     required
                     defaultValue={customerName}
-                    className="w-full border border-brand-border px-3 py-2 text-sm focus:outline-none focus:border-brand-dark text-brand-dark"
+                    className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand text-brand-dark transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase mb-1 tracking-wider text-brand-dark">
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
                     Cihaz Modeli
                   </label>
                   <input
                     name="deviceModel"
                     required
                     defaultValue={deviceModel}
-                    className="w-full border border-brand-border px-3 py-2 text-sm focus:outline-none focus:border-brand-dark text-brand-dark"
+                    className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand text-brand-dark transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase mb-1 tracking-wider text-brand-dark">
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
                     Yapılacak İşlem
                   </label>
                   <select
                     name="jobType"
                     required
                     defaultValue={jobType}
-                    className="w-full border border-brand-border px-3 py-2 text-sm focus:outline-none focus:border-brand-dark text-brand-dark bg-white cursor-pointer"
+                    className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand text-brand-dark bg-white cursor-pointer transition-all"
                   >
                     {JOB_TYPES.map((j) => (
                       <option key={j} value={j}>
@@ -109,26 +109,26 @@ export default function EditTicketModal({
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase mb-1 tracking-wider text-brand-dark">
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
                     Telefon
                   </label>
                   <input
                     name="phone"
                     type="tel"
                     defaultValue={phone ?? ""}
-                    className="w-full border border-brand-border px-3 py-2 text-sm focus:outline-none focus:border-brand-dark text-brand-dark"
+                    className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand text-brand-dark transition-all"
                     placeholder="05XX XXX XX XX"
                   />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="block text-xs font-bold uppercase mb-1 tracking-wider text-brand-dark">
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
                     Notlar
                   </label>
                   <textarea
                     name="notes"
                     defaultValue={notes ?? ""}
                     rows={3}
-                    className="w-full border border-brand-border px-3 py-2 text-sm focus:outline-none focus:border-brand-dark text-brand-dark resize-none"
+                    className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand text-brand-dark resize-none transition-all"
                     placeholder="İsteğe bağlı notlar"
                   />
                 </div>
@@ -138,14 +138,14 @@ export default function EditTicketModal({
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="px-4 py-2 text-sm font-bold uppercase tracking-wider border-2 border-brand-border text-brand-muted hover:border-brand-dark hover:text-brand-dark transition-colors"
+                  className="px-4 py-2 text-sm font-semibold rounded-lg border border-gray-200 text-gray-500 hover:border-gray-300 hover:text-brand-dark transition-colors"
                 >
                   İptal
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-6 py-2 text-sm font-bold uppercase tracking-widest bg-brand-dark text-white hover:bg-brand-hover disabled:opacity-50 transition-colors"
+                  className="px-5 py-2 text-sm font-semibold rounded-lg bg-brand-dark hover:bg-brand-hover text-white disabled:opacity-50 transition-colors"
                 >
                   {loading ? "Kaydediliyor…" : "Kaydet"}
                 </button>

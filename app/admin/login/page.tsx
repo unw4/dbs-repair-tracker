@@ -8,28 +8,20 @@ export default async function LoginPage({
   const { error } = await searchParams;
 
   return (
-    <div className="min-h-screen bg-brand-subtle flex flex-col items-center justify-center px-4">
-      {/* Logo / başlık */}
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center px-4">
       <div className="mb-8 text-center">
-        <h1 className="text-2xl font-bold tracking-widest uppercase text-brand-dark">
-          Tamir Takip
-        </h1>
-        <p className="text-xs text-brand-muted uppercase tracking-widest mt-1">
-          Yönetim Paneli
-        </p>
+        <h1 className="text-2xl font-bold text-brand-dark">Servis Takip</h1>
+        <p className="text-sm text-brand-muted mt-1">Yönetim Paneli</p>
       </div>
 
-      <div className="w-full max-w-sm border-2 border-brand-dark bg-white">
-        {/* Kart başlığı */}
-        <div className="bg-brand-dark text-white px-4 py-3">
-          <span className="text-xs font-bold uppercase tracking-widest">
-            Giriş Yap
-          </span>
+      <div className="w-full max-w-sm bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden">
+        <div className="bg-brand-dark text-white px-6 py-4">
+          <span className="text-sm font-semibold">Giriş Yap</span>
         </div>
 
         <form action={loginAction} className="p-6 flex flex-col gap-4">
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">
+            <label className="block text-sm font-semibold text-brand-dark mb-1.5">
               Kullanıcı Adı
             </label>
             <input
@@ -37,13 +29,13 @@ export default async function LoginPage({
               type="text"
               required
               autoComplete="username"
-              className="w-full border border-brand-border px-3 py-2 text-sm focus:outline-none focus:border-brand-dark text-brand-dark"
+              className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand transition-all text-brand-dark"
               placeholder="admin"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-1">
+            <label className="block text-sm font-semibold text-brand-dark mb-1.5">
               Şifre
             </label>
             <input
@@ -51,20 +43,20 @@ export default async function LoginPage({
               type="password"
               required
               autoComplete="current-password"
-              className="w-full border border-brand-border px-3 py-2 text-sm focus:outline-none focus:border-brand-dark text-brand-dark"
+              className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand transition-all text-brand-dark"
               placeholder="••••••••"
             />
           </div>
 
           {error && (
-            <p className="text-xs font-bold uppercase tracking-wider text-red-600 border border-red-300 bg-red-50 px-3 py-2">
+            <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
               Kullanıcı adı veya şifre hatalı.
             </p>
           )}
 
           <button
             type="submit"
-            className="w-full bg-brand-dark text-white py-2 text-sm font-bold uppercase tracking-widest hover:bg-brand-hover transition-colors"
+            className="w-full bg-brand-dark hover:bg-brand-hover text-white py-2.5 rounded-lg text-sm font-semibold transition-colors"
           >
             Giriş Yap
           </button>

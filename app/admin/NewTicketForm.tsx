@@ -25,48 +25,49 @@ export default function NewTicketForm() {
   }
 
   return (
-    <div className="border-2 border-brand-dark mb-6">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-5 overflow-hidden">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full bg-brand-dark text-white px-4 py-2 text-left font-bold tracking-widest uppercase hover:bg-brand-hover transition-colors"
+        className="w-full bg-brand-dark hover:bg-brand-hover text-white px-5 py-3 text-left text-sm font-semibold transition-colors flex items-center gap-2"
       >
-        {open ? "▲ İptal" : "+ Yeni Form"}
+        <span className="text-lg leading-none">{open ? "−" : "+"}</span>
+        {open ? "İptal" : "Yeni Form Oluştur"}
       </button>
 
       {open && (
-        <form ref={formRef} onSubmit={handleSubmit} className="p-4 bg-white">
+        <form ref={formRef} onSubmit={handleSubmit} className="p-5">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
             <div>
-              <label className="block text-xs font-bold uppercase mb-1 tracking-wider text-brand-dark">
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
                 Müşteri Adı
               </label>
               <input
                 name="customerName"
                 required
-                className="w-full border border-brand-border px-3 py-2 text-sm focus:outline-none focus:border-brand-dark text-brand-dark"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand text-brand-dark transition-all"
                 placeholder="Ahmet Yılmaz"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase mb-1 tracking-wider text-brand-dark">
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
                 Cihaz Modeli
               </label>
               <input
                 name="deviceModel"
                 required
-                className="w-full border border-brand-border px-3 py-2 text-sm focus:outline-none focus:border-brand-dark text-brand-dark"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand text-brand-dark transition-all"
                 placeholder="MacBook Pro 2021"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase mb-1 tracking-wider text-brand-dark">
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
                 Yapılacak İşlem
               </label>
               <select
                 name="jobType"
                 required
                 defaultValue="Servis"
-                className="w-full border border-brand-border px-3 py-2 text-sm focus:outline-none focus:border-brand-dark text-brand-dark bg-white cursor-pointer"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand text-brand-dark bg-white cursor-pointer transition-all"
               >
                 {JOB_TYPES.map((j) => (
                   <option key={j} value={j}>
@@ -76,32 +77,32 @@ export default function NewTicketForm() {
               </select>
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase mb-1 tracking-wider text-brand-dark">
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
                 Telefon
               </label>
               <input
                 name="phone"
                 type="tel"
-                className="w-full border border-brand-border px-3 py-2 text-sm focus:outline-none focus:border-brand-dark text-brand-dark"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand text-brand-dark transition-all"
                 placeholder="05XX XXX XX XX"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold uppercase mb-1 tracking-wider text-brand-dark">
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
                 Notlar
               </label>
               <input
                 name="notes"
-                className="w-full border border-brand-border px-3 py-2 text-sm focus:outline-none focus:border-brand-dark text-brand-dark"
-                placeholder="İsteğe bağlı notlar"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand text-brand-dark transition-all"
+                placeholder="İsteğe bağlı"
               />
             </div>
           </div>
-          <div className="mt-3">
+          <div className="mt-4">
             <button
               type="submit"
               disabled={loading}
-              className="bg-brand-dark text-white px-6 py-2 text-sm font-bold uppercase tracking-widest hover:bg-brand-hover disabled:opacity-50 transition-colors"
+              className="bg-brand-dark hover:bg-brand-hover text-white px-6 py-2.5 rounded-lg text-sm font-semibold disabled:opacity-50 transition-colors"
             >
               {loading ? "Oluşturuluyor…" : "Form Oluştur"}
             </button>

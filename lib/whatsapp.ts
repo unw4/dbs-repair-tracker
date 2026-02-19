@@ -13,9 +13,9 @@ export async function sendTrackingMessage(phone: string, ticketId: string) {
 
   const trackingUrl = `${appUrl}/track/${ticketId}`;
   const body =
-    `Merhaba! Cihazınız tamir takip sistemimize kaydedildi.\n\n` +
+    `Merhaba! Cihazınız servis takip sistemimize kaydedildi.\n\n` +
     `Takip linkiniz: ${trackingUrl}\n\n` +
-    `Bu link üzerinden tamir durumunuzu anlık takip edebilirsiniz.\n` +
+    `Bu link üzerinden servis durumunuzu anlık takip edebilirsiniz.\n` +
     `— Denizli Bilgisayar Sistemleri`;
 
   const res = await fetch(

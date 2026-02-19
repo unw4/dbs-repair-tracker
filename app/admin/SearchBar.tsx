@@ -20,16 +20,18 @@ export default function SearchBar() {
       }
       router.push(`/admin?${params.toString()}`);
     }, 300);
-    return () => { if (timer.current) clearTimeout(timer.current); };
+    return () => {
+      if (timer.current) clearTimeout(timer.current);
+    };
   }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="relative">
       <svg
-        className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-dark pointer-events-none"
+        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
         xmlns="http://www.w3.org/2000/svg"
-        width="15"
-        height="15"
+        width="14"
+        height="14"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -44,13 +46,13 @@ export default function SearchBar() {
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="Müşteri, cihaz, telefon, not, durum…"
-        className="w-full border-2 border-brand-dark pl-9 pr-8 py-2 text-sm font-medium focus:outline-none focus:bg-brand-subtle text-brand-dark placeholder:text-brand-muted bg-white"
+        placeholder="Müşteri, cihaz, telefon…"
+        className="w-full rounded-lg border border-gray-200 pl-9 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand text-brand-dark placeholder:text-gray-400 bg-white transition-all"
       />
       {value && (
         <button
           onClick={() => setValue("")}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-dark hover:text-brand-hover text-lg leading-none font-bold"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-dark text-lg leading-none transition-colors"
           aria-label="Temizle"
         >
           ×

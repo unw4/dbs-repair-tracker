@@ -18,3 +18,10 @@ export const STATUS_LABELS: Record<string, string> = {
   Ready: "Hazır",
   Delivered: "Teslim Edildi",
 };
+
+export function getApplicableStatuses(jobType: string): string[] {
+  if (jobType === "Servis") {
+    return STATUSES.filter((s) => s !== "Waiting for Parts");
+  }
+  return [...STATUSES];
+}

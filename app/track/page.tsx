@@ -22,78 +22,80 @@ export default function TrackLandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col justify-between">
-      {/* Üst Bar */}
-      <div className="border-b-2 border-brand-dark bg-brand-dark text-white px-6 py-4 flex items-center justify-between">
-        <img src="/logo.png" alt="Denizli Bilgisayar Sistemleri" className="h-10 w-auto" />
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
+      {/* Navbar */}
+      <header className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between shadow-sm">
+        <img
+          src="/logo.png"
+          alt="Denizli Bilgisayar Sistemleri"
+          className="h-9 w-auto"
+        />
         <a
           href="/admin"
-          className="text-xs text-brand-border uppercase tracking-wider hover:text-white transition-colors"
+          className="text-xs text-brand-muted hover:text-brand-dark font-medium transition-colors"
         >
           Yönetim Paneli →
         </a>
-      </div>
+      </header>
 
-      {/* Ortalanmış Giriş Kartı */}
-      <div className="flex-1 flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-sm">
-          {/* Kart başlığı */}
-          <div className="border-2 border-brand-dark bg-brand-dark text-white px-6 py-5 text-center">
-            <div className="flex justify-center mb-2">
-              <IconWrench className="w-8 h-8 text-brand" />
+      {/* Main */}
+      <main className="flex-1 flex items-center justify-center px-4 py-16">
+        <div className="w-full max-w-md">
+          {/* İkon + başlık */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-brand-light mb-4">
+              <IconWrench className="w-7 h-7 text-brand-dark" />
             </div>
-            <h2 className="text-base font-bold tracking-widest uppercase">
-              Form Sorgula
-            </h2>
-            <p className="text-xs text-brand-border mt-1 tracking-wider">
-              Cihazınızın tamir durumunu öğrenin
+            <h1 className="text-2xl font-bold text-brand-dark">
+              Servis Durumu Sorgula
+            </h1>
+            <p className="text-sm text-brand-muted mt-1.5">
+              Cihazınızın servis durumunu öğrenin
             </p>
           </div>
 
-          {/* Form */}
-          <form
-            onSubmit={handleSubmit}
-            className="border-2 border-t-0 border-brand-dark bg-white px-6 py-6"
-          >
-            <label className="block text-xs font-bold uppercase tracking-widest mb-2 text-brand-dark">
-              Takip No Girin
-            </label>
-            <input
-              type="text"
-              value={trackingNo}
-              onChange={(e) => {
-                setTrackingNo(e.target.value);
-                setError(false);
-              }}
-              placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-              className={`w-full border-2 px-4 py-3 text-sm font-mono focus:outline-none transition-colors text-brand-dark ${
-                error
-                  ? "border-brand-dark bg-brand-subtle"
-                  : "border-brand-border focus:border-brand-dark"
-              }`}
-            />
-            {error && (
-              <p className="text-xs font-bold uppercase tracking-wider text-brand-dark mt-2">
-                ⚠ Takip numarası boş olamaz.
-              </p>
-            )}
-
-            <button
-              type="submit"
-              className="w-full mt-4 bg-brand-dark text-white py-3 text-sm font-bold uppercase tracking-widest hover:bg-brand-hover transition-colors border-2 border-brand-dark"
-            >
-              Sorgula
-            </button>
-          </form>
-
-          {/* Alt not */}
-          <div className="border-2 border-t-0 border-brand-dark bg-brand-subtle px-6 py-3 text-center">
-            <p className="text-xs text-brand-muted uppercase tracking-wider">
-              Takip numaranız teknik servis tarafından verilir
-            </p>
+          {/* Kart */}
+          <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-6">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-brand-dark mb-1.5">
+                  Takip Numarası
+                </label>
+                <input
+                  type="text"
+                  value={trackingNo}
+                  onChange={(e) => {
+                    setTrackingNo(e.target.value);
+                    setError(false);
+                  }}
+                  placeholder="Takip numaranızı yapıştırın"
+                  className={`w-full rounded-lg border px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light transition-all text-brand-dark placeholder:text-gray-400 ${
+                    error
+                      ? "border-red-300 bg-red-50"
+                      : "border-gray-200 focus:border-brand"
+                  }`}
+                />
+                {error && (
+                  <p className="text-xs text-red-500 mt-1.5">
+                    ⚠ Takip numarası boş olamaz.
+                  </p>
+                )}
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-brand-dark hover:bg-brand-hover text-white py-3 rounded-lg text-sm font-semibold transition-colors"
+              >
+                Sorgula →
+              </button>
+            </form>
           </div>
+
+          <p className="text-center text-xs text-gray-400 mt-4">
+            Takip numaranız teknik servis tarafından verilir
+          </p>
         </div>
-      </div>
+      </main>
+
       <TrackFooter />
     </div>
   );

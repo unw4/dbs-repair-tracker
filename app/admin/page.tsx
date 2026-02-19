@@ -17,12 +17,12 @@ import EditTicketModal from "./EditTicketModal";
 import DeleteTicketButton from "./DeleteTicketButton";
 import type { ReactNode } from "react";
 
-const STATUS_COLORS: Record<string, string> = {
-  Received: "bg-brand-light border border-brand",
-  "In Progress": "bg-yellow-100 border border-yellow-500",
-  "Waiting for Parts": "bg-orange-100 border border-orange-500",
-  Ready: "bg-green-100 border border-green-600",
-  Delivered: "bg-brand-subtle border border-brand-muted",
+const STATUS_BADGE: Record<string, string> = {
+  Received: "bg-blue-50 text-blue-700",
+  "In Progress": "bg-yellow-50 text-yellow-700",
+  "Waiting for Parts": "bg-orange-50 text-orange-700",
+  Ready: "bg-green-50 text-green-700",
+  Delivered: "bg-gray-100 text-gray-500",
 };
 
 const FOLDER_ICONS: Record<string, ReactNode> = {
@@ -82,212 +82,215 @@ export default async function AdminPage({
     : "Tüm Formlar";
 
   return (
-    <div className="min-h-screen bg-white p-6">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
       {/* Üst Bar */}
-      <div className="border-2 border-brand-dark mb-6 flex items-center justify-between px-4 py-3 bg-brand-dark text-white">
-        <h1 className="text-xl font-bold tracking-widest uppercase">
-          Tamir Takip
-        </h1>
+      <header className="bg-brand-dark text-white px-6 py-4 flex items-center justify-between shadow-md">
+        <h1 className="text-base font-bold tracking-wide">Servis Takip</h1>
         <div className="flex items-center gap-4">
-          <span className="text-xs text-brand-border uppercase tracking-wider">
+          <span className="text-xs text-brand-border font-medium">
             Yönetim Paneli
           </span>
           <form action={logoutAction}>
             <button
               type="submit"
-              className="text-xs text-brand-border uppercase tracking-wider hover:text-white border border-brand-border hover:border-white px-2 py-1 transition-colors"
+              className="text-xs text-brand-border hover:text-white border border-brand-border hover:border-white px-3 py-1 rounded-lg transition-colors"
             >
               Çıkış
             </button>
           </form>
         </div>
-      </div>
+      </header>
 
-      {/* Yeni Form */}
-      <NewTicketForm />
+      <div className="flex-1 p-5 flex flex-col gap-5">
+        {/* Yeni Form */}
+        <NewTicketForm />
 
-      {/* Ana Alan: Tablo + Sağ Sidebar */}
-      <div className="flex gap-4 items-start">
-        {/* Form Tablosu */}
-        <div className="flex-1 border-2 border-brand-dark min-w-0">
-          <div className="bg-brand-light border-b-2 border-brand-dark px-4 py-2 flex items-center justify-between gap-4">
-            <h2 className="font-bold uppercase tracking-widest text-sm text-brand-dark whitespace-nowrap">
-              {tableLabel} ({displayed.length})
-            </h2>
-            <div className="w-72">
-              <SearchBar />
+        {/* Ana Alan: Tablo + Sağ Sidebar */}
+        <div className="flex gap-4 items-start">
+          {/* Form Tablosu */}
+          <div className="flex-1 bg-white rounded-xl shadow-sm border border-gray-100 min-w-0 overflow-hidden">
+            <div className="px-4 py-3 flex items-center justify-between gap-4 border-b border-gray-100">
+              <h2 className="font-semibold text-sm text-brand-dark whitespace-nowrap">
+                {tableLabel}{" "}
+                <span className="text-gray-400 font-normal">
+                  ({displayed.length})
+                </span>
+              </h2>
+              <div className="w-72">
+                <SearchBar />
+              </div>
             </div>
-          </div>
 
-          {displayed.length === 0 ? (
-            <div className="px-4 py-8 text-center text-brand-muted text-sm uppercase tracking-wider">
-              Bu kategoride henüz form yok.
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-brand-border bg-brand-subtle">
-                    <th className="text-left px-4 py-2 font-bold uppercase text-xs tracking-wider text-brand-dark">
-                      No
-                    </th>
-                    <th className="text-left px-4 py-2 font-bold uppercase text-xs tracking-wider text-brand-dark">
-                      Müşteri
-                    </th>
-                    <th className="text-left px-4 py-2 font-bold uppercase text-xs tracking-wider text-brand-dark">
-                      Telefon
-                    </th>
-                    <th className="text-left px-4 py-2 font-bold uppercase text-xs tracking-wider text-brand-dark">
-                      Cihaz
-                    </th>
-                    <th className="text-left px-4 py-2 font-bold uppercase text-xs tracking-wider text-brand-dark">
-                      İşlem
-                    </th>
-                    <th className="text-left px-4 py-2 font-bold uppercase text-xs tracking-wider text-brand-dark">
-                      Durum
-                    </th>
-                    <th className="text-left px-4 py-2 font-bold uppercase text-xs tracking-wider text-brand-dark">
-                      Güncellendi
-                    </th>
-                    <th className="text-left px-4 py-2 font-bold uppercase text-xs tracking-wider text-brand-dark">
-                      Takip
-                    </th>
-                    <th className="text-left px-4 py-2 font-bold uppercase text-xs tracking-wider text-brand-dark">
-                      Düzenle
-                    </th>
-                    <th className="px-4 py-2"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {displayed.map((ticket, i) => (
-                    <tr
-                      key={ticket.id}
-                      className={`border-b border-brand-border ${i % 2 === 0 ? "bg-white" : "bg-brand-subtle"}`}
-                    >
-                      <td className="px-4 py-3 font-mono text-xs text-brand-muted">
-                        {ticket.id.slice(0, 8)}…
-                      </td>
-                      <td className="px-4 py-3 font-semibold text-brand-dark">
-                        {ticket.customerName}
-                      </td>
-                      <td className="px-4 py-3 font-mono text-xs text-brand-muted">
-                        {ticket.phone ?? "—"}
-                      </td>
-                      <td className="px-4 py-3 text-brand-hover">
-                        {ticket.deviceModel}
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="inline-block px-2 py-0.5 text-xs font-bold uppercase tracking-wider bg-brand-light border border-brand text-brand-dark">
-                          {ticket.jobType}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex flex-col gap-1">
-                          <span
-                            className={`inline-block px-2 py-0.5 text-xs font-bold uppercase tracking-wider ${STATUS_COLORS[ticket.status] ?? "bg-brand-light border border-brand"}`}
-                          >
-                            {STATUS_LABELS[ticket.status] ?? ticket.status}
-                          </span>
-                          <StatusSelect
-                            id={ticket.id}
-                            current={ticket.status}
-                          />
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-xs text-brand-muted">
-                        {new Date(ticket.updatedAt).toLocaleDateString(
-                          "tr-TR",
-                          {
-                            month: "short",
-                            day: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          }
-                        )}
-                      </td>
-                      <td className="px-4 py-3">
-                        <a
-                          href={`/track/${ticket.id}`}
-                          target="_blank"
-                          className="text-xs underline hover:no-underline font-mono text-brand-muted hover:text-brand-dark"
-                        >
-                          /track/{ticket.id.slice(0, 8)}…
-                        </a>
-                      </td>
-                      <td className="px-4 py-3">
-                        <EditTicketModal
-                          id={ticket.id}
-                          customerName={ticket.customerName}
-                          deviceModel={ticket.deviceModel}
-                          jobType={ticket.jobType}
-                          phone={ticket.phone}
-                          notes={ticket.notes}
-                        />
-                      </td>
-                      <td className="px-4 py-3">
-                        <DeleteTicketButton id={ticket.id} />
-                      </td>
+            {displayed.length === 0 ? (
+              <div className="px-4 py-12 text-center text-gray-400 text-sm">
+                Bu kategoride henüz form yok.
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-100 bg-gray-50">
+                      <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        No
+                      </th>
+                      <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        Müşteri
+                      </th>
+                      <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        Telefon
+                      </th>
+                      <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        Cihaz
+                      </th>
+                      <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        İşlem
+                      </th>
+                      <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        Durum
+                      </th>
+                      <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        Güncellendi
+                      </th>
+                      <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        Takip
+                      </th>
+                      <th className="px-4 py-2.5"></th>
+                      <th className="px-4 py-2.5"></th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-
-        {/* Sağ Sidebar — Durum Klasörleri */}
-        <div className="w-52 flex-shrink-0 border-2 border-brand-dark">
-          <div className="bg-brand-dark text-white px-3 py-2 border-b-2 border-brand-dark">
-            <span className="text-xs font-bold uppercase tracking-widest">
-              Klasörler
-            </span>
+                  </thead>
+                  <tbody>
+                    {displayed.map((ticket) => (
+                      <tr
+                        key={ticket.id}
+                        className="border-b border-gray-50 hover:bg-gray-50 transition-colors"
+                      >
+                        <td className="px-4 py-3 font-mono text-xs text-gray-400">
+                          {ticket.id.slice(0, 8)}…
+                        </td>
+                        <td className="px-4 py-3 font-semibold text-brand-dark text-sm">
+                          {ticket.customerName}
+                        </td>
+                        <td className="px-4 py-3 font-mono text-xs text-gray-400">
+                          {ticket.phone ?? "—"}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-brand-muted">
+                          {ticket.deviceModel}
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className="inline-block px-2 py-0.5 text-xs font-semibold rounded-full bg-brand-subtle text-brand-dark">
+                            {ticket.jobType}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex flex-col gap-1.5">
+                            <span
+                              className={`inline-block px-2.5 py-0.5 text-xs font-semibold rounded-full ${
+                                STATUS_BADGE[ticket.status] ??
+                                "bg-gray-100 text-gray-500"
+                              }`}
+                            >
+                              {STATUS_LABELS[ticket.status] ?? ticket.status}
+                            </span>
+                            <StatusSelect
+                              id={ticket.id}
+                              current={ticket.status}
+                              jobType={ticket.jobType}
+                            />
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-xs text-gray-400">
+                          {new Date(ticket.updatedAt).toLocaleDateString(
+                            "tr-TR",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          <a
+                            href={`/track/${ticket.id}`}
+                            target="_blank"
+                            className="text-xs text-gray-400 hover:text-brand-dark underline underline-offset-2 hover:no-underline font-mono transition-colors"
+                          >
+                            /track/{ticket.id.slice(0, 6)}…
+                          </a>
+                        </td>
+                        <td className="px-4 py-3">
+                          <EditTicketModal
+                            id={ticket.id}
+                            customerName={ticket.customerName}
+                            deviceModel={ticket.deviceModel}
+                            jobType={ticket.jobType}
+                            phone={ticket.phone}
+                            notes={ticket.notes}
+                          />
+                        </td>
+                        <td className="px-4 py-3">
+                          <DeleteTicketButton id={ticket.id} />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
-          {/* Tümü */}
-          <Link
-            href="/admin"
-            className={`flex items-center justify-between px-3 py-3 border-b border-brand-border transition-colors ${
-              !activeStatus
-                ? "bg-brand text-brand-dark"
-                : "bg-white text-brand-dark hover:bg-brand-subtle"
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              <IconFolder className="w-4 h-4 flex-shrink-0" />
-              <span className="text-xs font-bold uppercase tracking-wider">
-                Tümü
+          {/* Sağ Sidebar — Durum Klasörleri */}
+          <div className="w-48 flex-shrink-0 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="px-3 py-2.5 border-b border-gray-100">
+              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                Klasörler
               </span>
             </div>
-            <span className="text-xs font-bold tabular-nums text-brand-hover">
-              {allTickets.length}
-            </span>
-          </Link>
 
-          {/* Her durum için bir klasör */}
-          {STATUSES.map((s) => {
-            const isActive = activeStatus === s;
-            return (
-              <Link
-                key={s}
-                href={`/admin?status=${encodeURIComponent(s)}`}
-                className={`flex items-center justify-between px-3 py-3 border-b border-brand-border last:border-b-0 transition-colors ${
-                  isActive
-                    ? "bg-brand text-brand-dark"
-                    : "bg-white text-brand-dark hover:bg-brand-subtle"
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  {FOLDER_ICONS[s]}
-                  <span className="text-xs font-bold uppercase tracking-wide leading-tight">
-                    {STATUS_LABELS[s]}
+            {/* Tümü */}
+            <Link
+              href="/admin"
+              className={`flex items-center justify-between px-3 py-2.5 border-b border-gray-50 transition-colors ${
+                !activeStatus
+                  ? "bg-brand-subtle text-brand-dark"
+                  : "text-gray-500 hover:bg-gray-50"
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <IconFolder className="w-4 h-4 flex-shrink-0" />
+                <span className="text-xs font-semibold">Tümü</span>
+              </div>
+              <span className="text-xs font-bold text-gray-400 tabular-nums">
+                {allTickets.length}
+              </span>
+            </Link>
+
+            {/* Her durum */}
+            {STATUSES.map((s) => {
+              const isActive = activeStatus === s;
+              return (
+                <Link
+                  key={s}
+                  href={`/admin?status=${encodeURIComponent(s)}`}
+                  className={`flex items-center justify-between px-3 py-2.5 border-b border-gray-50 last:border-b-0 transition-colors ${
+                    isActive
+                      ? "bg-brand-subtle text-brand-dark"
+                      : "text-gray-500 hover:bg-gray-50"
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    {FOLDER_ICONS[s]}
+                    <span className="text-xs font-semibold leading-tight">
+                      {STATUS_LABELS[s]}
+                    </span>
+                  </div>
+                  <span className="text-xs font-bold text-gray-400 tabular-nums flex-shrink-0">
+                    {counts[s] ?? 0}
                   </span>
-                </div>
-                <span className="text-xs font-bold tabular-nums flex-shrink-0 text-brand-muted">
-                  {counts[s] ?? 0}
-                </span>
-              </Link>
-            );
-          })}
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

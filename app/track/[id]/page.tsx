@@ -1,15 +1,16 @@
 import Link from "next/link";
 import { getTicketByUuid } from "@/lib/actions";
-import { STATUSES, STATUS_LABELS } from "@/lib/constants";
+import { STATUS_LABELS, getApplicableStatuses } from "@/lib/constants";
 import { notFound } from "next/navigation";
 import TrackFooter from "@/app/components/TrackFooter";
 
-const STATUS_STEP: Record<string, number> = {
-  Received: 0,
-  "In Progress": 1,
-  "Waiting for Parts": 2,
-  Ready: 3,
-  Delivered: 4,
+
+const STATUS_BADGE: Record<string, string> = {
+  Received: "bg-blue-50 text-blue-700",
+  "In Progress": "bg-yellow-50 text-yellow-700",
+  "Waiting for Parts": "bg-orange-50 text-orange-700",
+  Ready: "bg-green-50 text-green-700",
+  Delivered: "bg-gray-100 text-gray-500",
 };
 
 export default async function TrackPage({
@@ -22,178 +23,151 @@ export default async function TrackPage({
 
   if (!ticket) notFound();
 
-  const currentStep = STATUS_STEP[ticket.status] ?? 0;
+  const applicableStatuses = getApplicableStatuses(ticket.jobType);
+  const currentStep = applicableStatuses.indexOf(ticket.status);
+
+  const info = [
+    { label: "Müşteri", value: ticket.customerName },
+    { label: "Cihaz", value: ticket.deviceModel },
+    { label: "Yapılacak İşlem", value: ticket.jobType },
+    ...(ticket.phone ? [{ label: "Telefon", value: ticket.phone }] : []),
+    {
+      label: "Kayıt Tarihi",
+      value: new Date(ticket.createdAt).toLocaleDateString("tr-TR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
+    },
+    ...(ticket.notes ? [{ label: "Notlar", value: ticket.notes }] : []),
+  ];
 
   return (
-    <div className="min-h-screen bg-white flex flex-col justify-between">
-      {/* Üst Bar */}
-      <div className="border-b-2 border-brand-dark bg-brand-dark text-white px-6 py-4 flex items-center justify-between">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
+      {/* Navbar */}
+      <header className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between shadow-sm">
         <Link href="/track" className="opacity-90 hover:opacity-100 transition-opacity">
-          <img src="/logo.png" alt="Denizli Bilgisayar Sistemleri" className="h-10 w-auto" />
+          <img
+            src="/logo.png"
+            alt="Denizli Bilgisayar Sistemleri"
+            className="h-9 w-auto"
+          />
         </Link>
-        <span className="text-xs text-brand-border uppercase tracking-wider">
+        <span className="text-xs text-brand-muted font-medium">
           Müşteri Takip Portalı
         </span>
-      </div>
+      </header>
 
-      <div className="max-w-2xl mx-auto px-4 py-10">
-        {/* Takip No */}
-        <div className="border-2 border-brand-dark mb-6 px-4 py-3 bg-brand-subtle flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-          <span className="text-xs font-bold uppercase tracking-widest text-brand-muted">
-            Takip No
-          </span>
-          <span className="font-mono text-sm text-brand-dark break-all">
-            {ticket.id}
-          </span>
-        </div>
-
-        {/* Cihaz Bilgileri */}
-        <div className="border-2 border-brand-dark mb-6">
-          <div className="bg-brand-dark text-white px-4 py-2">
-            <span className="text-xs font-bold uppercase tracking-widest">
-              Cihaz Bilgileri
+      <main className="flex-1 max-w-2xl mx-auto w-full px-4 py-10 flex flex-col gap-4">
+        {/* Güncel Durum */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">
+              Güncel Durum
+            </p>
+            <span
+              className={`inline-block text-sm font-semibold px-3 py-1 rounded-full ${
+                STATUS_BADGE[ticket.status] ?? "bg-gray-100 text-gray-500"
+              }`}
+            >
+              {STATUS_LABELS[ticket.status] ?? ticket.status}
             </span>
           </div>
-          <div className="divide-y divide-brand-border">
-            <div className="flex justify-between px-4 py-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-brand-muted">
-                Müşteri
-              </span>
-              <span className="text-sm font-semibold text-brand-dark">{ticket.customerName}</span>
-            </div>
-            <div className="flex justify-between px-4 py-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-brand-muted">
-                Cihaz
-              </span>
-              <span className="text-sm text-brand-hover">{ticket.deviceModel}</span>
-            </div>
-            <div className="flex justify-between px-4 py-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-brand-muted">
-                Yapılacak İşlem
-              </span>
-              <span className="text-sm font-bold text-brand-dark border border-brand px-2 py-0.5 bg-brand-light">
-                {ticket.jobType}
-              </span>
-            </div>
-            {ticket.phone && (
-              <div className="flex justify-between px-4 py-3">
-                <span className="text-xs font-bold uppercase tracking-wider text-brand-muted">
-                  Telefon
-                </span>
-                <span className="text-sm font-mono text-brand-dark">{ticket.phone}</span>
-              </div>
-            )}
-            <div className="flex justify-between px-4 py-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-brand-muted">
-                Tarih
-              </span>
-              <span className="text-sm text-brand-muted">
-                {new Date(ticket.createdAt).toLocaleDateString("tr-TR", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </span>
-            </div>
-            {ticket.notes && (
-              <div className="flex justify-between px-4 py-3">
-                <span className="text-xs font-bold uppercase tracking-wider text-brand-muted">
-                  Notlar
-                </span>
-                <span className="text-sm text-brand-hover text-right max-w-xs">
-                  {ticket.notes}
-                </span>
-              </div>
-            )}
-          </div>
+          <p className="text-xs text-gray-400 text-right">
+            Son güncelleme
+            <br />
+            {new Date(ticket.updatedAt).toLocaleString("tr-TR", {
+              month: "short",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </p>
         </div>
 
-        {/* Güncel Durum Etiketi */}
-        <div className="border-2 border-brand-dark mb-6 px-4 py-4 flex items-center justify-between">
-          <span className="text-xs font-bold uppercase tracking-widest text-brand-muted">
-            Güncel Durum
-          </span>
-          <span className="text-sm font-bold uppercase tracking-widest border-2 border-brand-dark px-3 py-1 bg-brand text-brand-dark">
-            {STATUS_LABELS[ticket.status] ?? ticket.status}
-          </span>
-        </div>
-
-        {/* İlerleme — solid renk bloklar */}
-        <div className="border-2 border-brand-dark mb-2">
-          <div className="bg-brand-light border-b-2 border-brand-dark px-4 py-2">
-            <span className="text-xs font-bold uppercase tracking-widest text-brand-dark">
-              Tamir Durumu
-            </span>
-          </div>
-          <div className="p-4">
-            {/* Bloklar */}
-            <div className="flex w-full border-2 border-brand-dark overflow-hidden">
-              {STATUSES.map((status, i) => {
-                const isDone = i < currentStep;
-                const isCurrent = i === currentStep;
-                return (
-                  <div
-                    key={status}
-                    className={`flex-1 relative border-r border-brand-dark last:border-r-0 ${
-                      isDone
-                        ? "bg-brand-dark"
-                        : isCurrent
-                          ? "bg-brand"
-                          : "bg-white"
-                    }`}
-                    style={{ minHeight: "36px" }}
-                  />
-                );
-              })}
-            </div>
-
-            {/* Etiketler */}
-            <div className="flex w-full mt-3">
-              {STATUSES.map((status, i) => {
-                const isDone = i < currentStep;
-                const isCurrent = i === currentStep;
-                return (
-                  <div key={status} className="flex-1 px-0.5">
+        {/* Tamir Süreci — Stepper */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+          <h2 className="text-sm font-semibold text-brand-dark mb-5">
+            Servis Süreci
+          </h2>
+          <div className="flex items-start">
+            {applicableStatuses.map((status, i) => {
+              const isDone = i < currentStep;
+              const isCurrent = i === currentStep;
+              return (
+                <div key={status} className="flex items-start flex-1 last:flex-none">
+                  {/* Adım */}
+                  <div className="flex flex-col items-center flex-shrink-0">
                     <div
-                      className={`text-center text-xs font-bold uppercase tracking-wide leading-tight ${
+                      className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all ${
+                        isDone
+                          ? "bg-brand-dark border-brand-dark text-white"
+                          : isCurrent
+                          ? "bg-white border-brand-dark text-brand-dark"
+                          : "bg-white border-gray-200 text-gray-300"
+                      }`}
+                    >
+                      {isDone ? "✓" : i + 1}
+                    </div>
+                    <span
+                      className={`text-center text-xs mt-2 font-medium leading-tight max-w-[64px] ${
                         isDone
                           ? "text-brand-dark"
                           : isCurrent
-                            ? "text-brand"
-                            : "text-brand-border"
+                          ? "text-brand-dark font-semibold"
+                          : "text-gray-300"
                       }`}
                     >
-                      {isCurrent && (
-                        <span className="block text-base leading-none mb-0.5">
-                          ▼
-                        </span>
-                      )}
-                      {STATUS_LABELS[status] ?? status}
-                    </div>
+                      {STATUS_LABELS[status]}
+                    </span>
                   </div>
-                );
-              })}
-            </div>
+                  {/* Bağlantı çizgisi */}
+                  {i < applicableStatuses.length - 1 && (
+                    <div
+                      className={`flex-1 h-0.5 mt-4 mx-1 ${
+                        i < currentStep ? "bg-brand-dark" : "bg-gray-200"
+                      }`}
+                    />
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* Adım göstergesi */}
-        <div className="text-center text-xs text-brand-muted uppercase tracking-widest mb-8">
-          Adım {currentStep + 1} / {STATUSES.length}
+        {/* Cihaz Bilgileri */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+          <h2 className="text-sm font-semibold text-brand-dark mb-3">
+            Cihaz Bilgileri
+          </h2>
+          <div className="flex flex-col divide-y divide-gray-50">
+            {info.map(({ label, value }) => (
+              <div
+                key={label}
+                className="flex justify-between items-start py-2.5 first:pt-0 last:pb-0"
+              >
+                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide flex-shrink-0 mr-4">
+                  {label}
+                </span>
+                <span className="text-sm text-brand-dark text-right">
+                  {value}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Son güncelleme */}
-        <div className="border border-brand-border px-4 py-3 text-xs text-brand-muted text-center uppercase tracking-wider">
-          Son güncelleme:{" "}
-          {new Date(ticket.updatedAt).toLocaleString("tr-TR", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
+        {/* Takip No */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 px-5 py-3">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-0.5">
+            Takip No
+          </p>
+          <p className="font-mono text-xs text-brand-muted break-all">
+            {ticket.id}
+          </p>
         </div>
-      </div>
+      </main>
+
       <TrackFooter />
     </div>
   );
