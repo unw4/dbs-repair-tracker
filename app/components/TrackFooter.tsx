@@ -1,16 +1,16 @@
 export default function TrackFooter() {
   return (
-    <footer className="bg-white border-t border-gray-100 px-6 py-4 text-center">
-      <p className="text-xs text-gray-400">
+    <footer className="bg-white dark:bg-slate-800 border-t border-gray-100 dark:border-slate-700 px-6 py-4 text-center transition-colors">
+      <p className="text-xs text-gray-400 dark:text-slate-500">
         &copy; 2026 Denizli Bilgisayar Sistemleri &mdash; Tüm Hakları Saklıdır
       </p>
-      <p className="mt-1.5 flex items-center justify-center gap-1.5 text-xs text-gray-400">
+      <p className="mt-1.5 flex items-center justify-center gap-1.5 text-xs text-gray-400 dark:text-slate-500">
         Tasarım ve geliştirme:
         <a
           href="https://www.linkedin.com/in/mert-egemen-%C3%A7ar-aa8664227/"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-gray-400 hover:text-brand-muted transition-colors font-medium"
+          className="linkedin-link"
         >
           Mert Egemen ÇAR
           <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">

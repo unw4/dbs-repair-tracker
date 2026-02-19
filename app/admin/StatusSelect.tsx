@@ -22,12 +22,10 @@ export default function StatusSelect({
     <select
       defaultValue={current}
       onChange={handleChange}
-      className="rounded-lg border border-gray-200 px-2 py-1 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-brand-light cursor-pointer text-brand-dark transition-all"
+      className="rounded-lg border border-gray-200 dark:border-slate-600 px-2 py-1 text-xs bg-white dark:bg-slate-700 text-brand-dark dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-light cursor-pointer transition-all"
     >
       {statuses.map((s) => (
-        <option key={s} value={s}>
-          {STATUS_LABELS[s] ?? s}
-        </option>
+        <option key={s} value={s}>{STATUS_LABELS[s] ?? s}</option>
       ))}
     </select>
   );

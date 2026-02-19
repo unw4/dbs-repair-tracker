@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-brand-dark:   #1a4a8a;
   --color-brand-hover:  #2560af;
@@ -12,7 +14,12 @@
 
 :root {
   --background: #F8FAFC;
-  --foreground: #0D3A6E;
+  --foreground: #1a4a8a;
+}
+
+.dark {
+  --background: #0f172a;
+  --foreground: #e2e8f0;
 }
 
 body {
@@ -22,4 +29,20 @@ body {
     "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.linkedin-link {
+  color: #9ca3af;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.linkedin-link:hover {
+  color: #0A66C2;
+  transform: scale(1.1);
 }

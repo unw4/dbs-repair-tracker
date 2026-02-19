@@ -15,14 +15,15 @@ import StatusSelect from "./StatusSelect";
 import SearchBar from "./SearchBar";
 import EditTicketModal from "./EditTicketModal";
 import DeleteTicketButton from "./DeleteTicketButton";
+import DarkModeToggle from "@/app/components/DarkModeToggle";
 import type { ReactNode } from "react";
 
 const STATUS_BADGE: Record<string, string> = {
-  Received: "bg-blue-50 text-blue-700",
-  "In Progress": "bg-yellow-50 text-yellow-700",
-  "Waiting for Parts": "bg-orange-50 text-orange-700",
-  Ready: "bg-green-50 text-green-700",
-  Delivered: "bg-gray-100 text-gray-500",
+  Received: "bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+  "In Progress": "bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300",
+  "Waiting for Parts": "bg-orange-50 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300",
+  Ready: "bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300",
+  Delivered: "bg-gray-100 text-gray-500 dark:bg-slate-700 dark:text-slate-400",
 };
 
 const FOLDER_ICONS: Record<string, ReactNode> = {
@@ -44,9 +45,7 @@ export default async function AdminPage({
   const activeStatus = status && status !== "all" ? status : null;
   const query = q?.trim().toLowerCase() ?? "";
 
-  const allTickets = await prisma.ticket.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+  const allTickets = await prisma.ticket.findMany({ orderBy: { createdAt: "desc" } });
 
   const statusFiltered = activeStatus
     ? allTickets.filter((t) => t.status === activeStatus)
@@ -54,42 +53,26 @@ export default async function AdminPage({
 
   const displayed = query
     ? statusFiltered.filter((t) =>
-        [
-          t.id,
-          t.customerName,
-          t.deviceModel,
-          t.jobType,
-          t.phone ?? "",
-          t.notes ?? "",
-          STATUS_LABELS[t.status] ?? t.status,
-        ]
-          .join(" ")
-          .toLowerCase()
-          .includes(query)
+        [t.id, t.customerName, t.deviceModel, t.jobType, t.phone ?? "", t.notes ?? "", STATUS_LABELS[t.status] ?? t.status]
+          .join(" ").toLowerCase().includes(query)
       )
     : statusFiltered;
 
   const counts = STATUSES.reduce(
-    (acc, s) => {
-      acc[s] = allTickets.filter((t) => t.status === s).length;
-      return acc;
-    },
+    (acc, s) => { acc[s] = allTickets.filter((t) => t.status === s).length; return acc; },
     {} as Record<string, number>
   );
 
-  const tableLabel = activeStatus
-    ? (STATUS_LABELS[activeStatus] ?? activeStatus)
-    : "Tüm Formlar";
+  const tableLabel = activeStatus ? (STATUS_LABELS[activeStatus] ?? activeStatus) : "Tüm Formlar";
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-900 flex flex-col transition-colors">
       {/* Üst Bar */}
       <header className="bg-brand-dark text-white px-6 py-4 flex items-center justify-between shadow-md">
         <h1 className="text-base font-bold tracking-wide">Servis Takip</h1>
-        <div className="flex items-center gap-4">
-          <span className="text-xs text-brand-border font-medium">
-            Yönetim Paneli
-          </span>
+        <div className="flex items-center gap-3">
+          <DarkModeToggle className="text-brand-border hover:text-white hover:bg-white/10" />
+          <span className="text-xs text-brand-border font-medium">Yönetim Paneli</span>
           <form action={logoutAction}>
             <button
               type="submit"
@@ -102,19 +85,15 @@ export default async function AdminPage({
       </header>
 
       <div className="flex-1 p-5 flex flex-col gap-5">
-        {/* Yeni Form */}
         <NewTicketForm />
 
-        {/* Ana Alan: Tablo + Sağ Sidebar */}
         <div className="flex gap-4 items-start">
           {/* Form Tablosu */}
-          <div className="flex-1 bg-white rounded-xl shadow-sm border border-gray-100 min-w-0 overflow-hidden">
-            <div className="px-4 py-3 flex items-center justify-between gap-4 border-b border-gray-100">
-              <h2 className="font-semibold text-sm text-brand-dark whitespace-nowrap">
+          <div className="flex-1 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 min-w-0 overflow-hidden">
+            <div className="px-4 py-3 flex items-center justify-between gap-4 border-b border-gray-100 dark:border-slate-700">
+              <h2 className="font-semibold text-sm text-brand-dark dark:text-slate-100 whitespace-nowrap">
                 {tableLabel}{" "}
-                <span className="text-gray-400 font-normal">
-                  ({displayed.length})
-                </span>
+                <span className="text-gray-400 dark:text-slate-500 font-normal">({displayed.length})</span>
               </h2>
               <div className="w-72">
                 <SearchBar />
@@ -122,98 +101,62 @@ export default async function AdminPage({
             </div>
 
             {displayed.length === 0 ? (
-              <div className="px-4 py-12 text-center text-gray-400 text-sm">
+              <div className="px-4 py-12 text-center text-gray-400 dark:text-slate-500 text-sm">
                 Bu kategoride henüz form yok.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-gray-100 bg-gray-50">
-                      <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                        No
-                      </th>
-                      <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                        Müşteri
-                      </th>
-                      <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                        Telefon
-                      </th>
-                      <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                        Cihaz
-                      </th>
-                      <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                        İşlem
-                      </th>
-                      <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                        Durum
-                      </th>
-                      <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                        Güncellendi
-                      </th>
-                      <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                        Takip
-                      </th>
-                      <th className="px-4 py-2.5"></th>
-                      <th className="px-4 py-2.5"></th>
+                    <tr className="border-b border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-700/50">
+                      {["No", "Müşteri", "Telefon", "Cihaz", "İşlem", "Durum", "Güncellendi", "Takip", "", ""].map((h, i) => (
+                        <th key={i} className="text-left px-4 py-2.5 text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider">
+                          {h}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody>
                     {displayed.map((ticket) => (
                       <tr
                         key={ticket.id}
-                        className="border-b border-gray-50 hover:bg-gray-50 transition-colors"
+                        className="border-b border-gray-50 dark:border-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors"
                       >
-                        <td className="px-4 py-3 font-mono text-xs text-gray-400">
+                        <td className="px-4 py-3 font-mono text-xs text-gray-400 dark:text-slate-500">
                           {ticket.id.slice(0, 8)}…
                         </td>
-                        <td className="px-4 py-3 font-semibold text-brand-dark text-sm">
+                        <td className="px-4 py-3 font-semibold text-brand-dark dark:text-slate-100 text-sm">
                           {ticket.customerName}
                         </td>
-                        <td className="px-4 py-3 font-mono text-xs text-gray-400">
+                        <td className="px-4 py-3 font-mono text-xs text-gray-400 dark:text-slate-500">
                           {ticket.phone ?? "—"}
                         </td>
-                        <td className="px-4 py-3 text-sm text-brand-muted">
+                        <td className="px-4 py-3 text-sm text-brand-muted dark:text-slate-300">
                           {ticket.deviceModel}
                         </td>
                         <td className="px-4 py-3">
-                          <span className="inline-block px-2 py-0.5 text-xs font-semibold rounded-full bg-brand-subtle text-brand-dark">
+                          <span className="inline-block px-2 py-0.5 text-xs font-semibold rounded-full bg-brand-subtle dark:bg-slate-700 text-brand-dark dark:text-slate-200">
                             {ticket.jobType}
                           </span>
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex flex-col gap-1.5">
-                            <span
-                              className={`inline-block px-2.5 py-0.5 text-xs font-semibold rounded-full ${
-                                STATUS_BADGE[ticket.status] ??
-                                "bg-gray-100 text-gray-500"
-                              }`}
-                            >
+                            <span className={`inline-block px-2.5 py-0.5 text-xs font-semibold rounded-full ${STATUS_BADGE[ticket.status] ?? "bg-gray-100 text-gray-500"}`}>
                               {STATUS_LABELS[ticket.status] ?? ticket.status}
                             </span>
-                            <StatusSelect
-                              id={ticket.id}
-                              current={ticket.status}
-                              jobType={ticket.jobType}
-                            />
+                            <StatusSelect id={ticket.id} current={ticket.status} jobType={ticket.jobType} />
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-xs text-gray-400">
-                          {new Date(ticket.updatedAt).toLocaleDateString(
-                            "tr-TR",
-                            {
-                              month: "short",
-                              day: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            }
-                          )}
+                        <td className="px-4 py-3 text-xs text-gray-400 dark:text-slate-500">
+                          {new Date(ticket.updatedAt).toLocaleDateString("tr-TR", {
+                            month: "short", day: "numeric", hour: "2-digit", minute: "2-digit",
+                          })}
                         </td>
                         <td className="px-4 py-3">
                           <a
                             href={`/track/${ticket.id}`}
                             target="_blank"
-                            className="text-xs text-gray-400 hover:text-brand-dark underline underline-offset-2 hover:no-underline font-mono transition-colors"
+                            className="text-xs text-gray-400 dark:text-slate-500 hover:text-brand-dark dark:hover:text-slate-200 underline underline-offset-2 hover:no-underline font-mono transition-colors"
                           >
                             /track/{ticket.id.slice(0, 6)}…
                           </a>
@@ -239,52 +182,48 @@ export default async function AdminPage({
             )}
           </div>
 
-          {/* Sağ Sidebar — Durum Klasörleri */}
-          <div className="w-48 flex-shrink-0 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="px-3 py-2.5 border-b border-gray-100">
-              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+          {/* Sağ Sidebar */}
+          <div className="w-48 flex-shrink-0 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
+            <div className="px-3 py-2.5 border-b border-gray-100 dark:border-slate-700">
+              <span className="text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider">
                 Klasörler
               </span>
             </div>
 
-            {/* Tümü */}
             <Link
               href="/admin"
-              className={`flex items-center justify-between px-3 py-2.5 border-b border-gray-50 transition-colors ${
+              className={`flex items-center justify-between px-3 py-2.5 border-b border-gray-50 dark:border-slate-700/50 transition-colors ${
                 !activeStatus
-                  ? "bg-brand-subtle text-brand-dark"
-                  : "text-gray-500 hover:bg-gray-50"
+                  ? "bg-brand-subtle dark:bg-slate-700 text-brand-dark dark:text-slate-100"
+                  : "text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700/50"
               }`}
             >
               <div className="flex items-center gap-2">
                 <IconFolder className="w-4 h-4 flex-shrink-0" />
                 <span className="text-xs font-semibold">Tümü</span>
               </div>
-              <span className="text-xs font-bold text-gray-400 tabular-nums">
+              <span className="text-xs font-bold text-gray-400 dark:text-slate-500 tabular-nums">
                 {allTickets.length}
               </span>
             </Link>
 
-            {/* Her durum */}
             {STATUSES.map((s) => {
               const isActive = activeStatus === s;
               return (
                 <Link
                   key={s}
                   href={`/admin?status=${encodeURIComponent(s)}`}
-                  className={`flex items-center justify-between px-3 py-2.5 border-b border-gray-50 last:border-b-0 transition-colors ${
+                  className={`flex items-center justify-between px-3 py-2.5 border-b border-gray-50 dark:border-slate-700/50 last:border-b-0 transition-colors ${
                     isActive
-                      ? "bg-brand-subtle text-brand-dark"
-                      : "text-gray-500 hover:bg-gray-50"
+                      ? "bg-brand-subtle dark:bg-slate-700 text-brand-dark dark:text-slate-100"
+                      : "text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700/50"
                   }`}
                 >
                   <div className="flex items-center gap-2">
                     {FOLDER_ICONS[s]}
-                    <span className="text-xs font-semibold leading-tight">
-                      {STATUS_LABELS[s]}
-                    </span>
+                    <span className="text-xs font-semibold leading-tight">{STATUS_LABELS[s]}</span>
                   </div>
-                  <span className="text-xs font-bold text-gray-400 tabular-nums flex-shrink-0">
+                  <span className="text-xs font-bold text-gray-400 dark:text-slate-500 tabular-nums flex-shrink-0">
                     {counts[s] ?? 0}
                   </span>
                 </Link>

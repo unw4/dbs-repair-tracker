@@ -25,7 +25,7 @@ export default function NewTicketForm() {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-5 overflow-hidden">
+    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 mb-5 overflow-hidden">
       <button
         onClick={() => setOpen((v) => !v)}
         className="w-full bg-brand-dark hover:bg-brand-hover text-white px-5 py-3 text-left text-sm font-semibold transition-colors flex items-center gap-2"
@@ -37,64 +37,57 @@ export default function NewTicketForm() {
       {open && (
         <form ref={formRef} onSubmit={handleSubmit} className="p-5">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+            {[
+              { name: "customerName", label: "Müşteri Adı", placeholder: "Ahmet Yılmaz", type: "text", required: true },
+              { name: "deviceModel", label: "Cihaz Modeli", placeholder: "MacBook Pro 2021", type: "text", required: true },
+            ].map(({ name, label, placeholder, type, required }) => (
+              <div key={name}>
+                <label className="block text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+                  {label}
+                </label>
+                <input
+                  name={name}
+                  type={type}
+                  required={required}
+                  placeholder={placeholder}
+                  className="w-full rounded-lg border border-gray-200 dark:border-slate-600 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light text-brand-dark dark:text-slate-100 bg-white dark:bg-slate-700 transition-all"
+                />
+              </div>
+            ))}
             <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
-                Müşteri Adı
-              </label>
-              <input
-                name="customerName"
-                required
-                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand text-brand-dark transition-all"
-                placeholder="Ahmet Yılmaz"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
-                Cihaz Modeli
-              </label>
-              <input
-                name="deviceModel"
-                required
-                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand text-brand-dark transition-all"
-                placeholder="MacBook Pro 2021"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                 Yapılacak İşlem
               </label>
               <select
                 name="jobType"
                 required
                 defaultValue="Servis"
-                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand text-brand-dark bg-white cursor-pointer transition-all"
+                className="w-full rounded-lg border border-gray-200 dark:border-slate-600 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light text-brand-dark dark:text-slate-100 bg-white dark:bg-slate-700 cursor-pointer transition-all"
               >
                 {JOB_TYPES.map((j) => (
-                  <option key={j} value={j}>
-                    {j}
-                  </option>
+                  <option key={j} value={j}>{j}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                 Telefon
               </label>
               <input
                 name="phone"
                 type="tel"
-                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand text-brand-dark transition-all"
                 placeholder="05XX XXX XX XX"
+                className="w-full rounded-lg border border-gray-200 dark:border-slate-600 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light text-brand-dark dark:text-slate-100 bg-white dark:bg-slate-700 transition-all"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                 Notlar
               </label>
               <input
                 name="notes"
-                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light focus:border-brand text-brand-dark transition-all"
                 placeholder="İsteğe bağlı"
+                className="w-full rounded-lg border border-gray-200 dark:border-slate-600 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-light text-brand-dark dark:text-slate-100 bg-white dark:bg-slate-700 transition-all"
               />
             </div>
           </div>
