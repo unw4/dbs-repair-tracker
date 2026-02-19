@@ -3,12 +3,7 @@ export async function sendTrackingMessage(phone: string, ticketId: string) {
   const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
   const appUrl = process.env.APP_URL;
 
-  console.log("[WhatsApp] called", { phone, ticketId, hasPhoneNumberId: !!phoneNumberId, hasToken: !!accessToken, hasAppUrl: !!appUrl });
-
-  if (!phoneNumberId || !accessToken || !appUrl) {
-    console.log("[WhatsApp] missing env vars, skipping");
-    return;
-  }
+  if (!phoneNumberId || !accessToken || !appUrl) return;
 
   // Türkiye numaralarını uluslararası formata çevir (05XX → 905XX)
   const normalized = phone
@@ -40,6 +35,4 @@ export async function sendTrackingMessage(phone: string, ticketId: string) {
     }
   );
 
-  const json = await res.json();
-  console.log("[WhatsApp]", JSON.stringify(json));
 }
