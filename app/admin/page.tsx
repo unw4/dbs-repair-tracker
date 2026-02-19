@@ -9,6 +9,7 @@ import {
   IconHourglass,
   IconCheck,
   IconPackage,
+  IconAlert,
 } from "@/app/components/Icons";
 import NewTicketForm from "./NewTicketForm";
 import StatusSelect from "./StatusSelect";
@@ -43,11 +44,23 @@ export default async function AdminPage({
 }) {
   const { status, q } = await searchParams;
   const activeStatus = status && status !== "all" ? status : null;
+  const showOverdue = status === "overdue";
   const query = q?.trim().toLowerCase() ?? "";
 
   const allTickets = await prisma.ticket.findMany({ orderBy: { createdAt: "desc" } });
 
-  const statusFiltered = activeStatus
+  const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
+  const now = Date.now();
+
+  const isOverdue = (t: (typeof allTickets)[number]) =>
+    (t.status === "Received" || t.status === "In Progress") &&
+    now - new Date(t.updatedAt).getTime() > THREE_DAYS_MS;
+
+  const overdueTickets = allTickets.filter(isOverdue);
+
+  const statusFiltered = showOverdue
+    ? overdueTickets
+    : activeStatus
     ? allTickets.filter((t) => t.status === activeStatus)
     : allTickets;
 
@@ -63,7 +76,11 @@ export default async function AdminPage({
     {} as Record<string, number>
   );
 
-  const tableLabel = activeStatus ? (STATUS_LABELS[activeStatus] ?? activeStatus) : "Tüm Formlar";
+  const tableLabel = showOverdue
+    ? "3 Gün+ Bekleyen"
+    : activeStatus
+    ? (STATUS_LABELS[activeStatus] ?? activeStatus)
+    : "Tüm Formlar";
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-900 flex flex-col transition-colors">
@@ -125,8 +142,15 @@ export default async function AdminPage({
                         <td className="px-4 py-3 font-mono text-xs text-gray-400 dark:text-slate-500">
                           {ticket.id.slice(0, 8)}…
                         </td>
-                        <td className="px-4 py-3 font-semibold text-brand-dark dark:text-slate-100 text-sm">
-                          {ticket.customerName}
+                        <td className="px-4 py-3 text-sm">
+                          <div className="flex items-center gap-1.5">
+                            {isOverdue(ticket) && (
+                              <IconAlert className="w-3.5 h-3.5 text-orange-500 flex-shrink-0" />
+                            )}
+                            <span className="font-semibold text-brand-dark dark:text-slate-100">
+                              {ticket.customerName}
+                            </span>
+                          </div>
                         </td>
                         <td className="px-4 py-3 font-mono text-xs text-gray-400 dark:text-slate-500">
                           {ticket.phone ?? "—"}
@@ -190,10 +214,29 @@ export default async function AdminPage({
               </span>
             </div>
 
+            {/* 3 Gün+ klasörü */}
+            <Link
+              href="/admin?status=overdue"
+              className={`flex items-center justify-between px-3 py-2.5 border-b border-gray-50 dark:border-slate-700/50 transition-colors ${
+                showOverdue
+                  ? "bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400"
+                  : "text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700/50"
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <IconAlert className="w-4 h-4 flex-shrink-0 text-orange-500" />
+                <span className="text-xs font-semibold">3 Gün+</span>
+              </div>
+              <span className="text-xs font-bold tabular-nums text-orange-500">
+                {overdueTickets.length}
+              </span>
+            </Link>
+
+            {/* Tümü */}
             <Link
               href="/admin"
               className={`flex items-center justify-between px-3 py-2.5 border-b border-gray-50 dark:border-slate-700/50 transition-colors ${
-                !activeStatus
+                !activeStatus && !showOverdue
                   ? "bg-brand-subtle dark:bg-slate-700 text-brand-dark dark:text-slate-100"
                   : "text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700/50"
               }`}
@@ -208,7 +251,7 @@ export default async function AdminPage({
             </Link>
 
             {STATUSES.map((s) => {
-              const isActive = activeStatus === s;
+              const isActive = !showOverdue && activeStatus === s;
               return (
                 <Link
                   key={s}
