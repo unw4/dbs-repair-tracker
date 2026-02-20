@@ -174,6 +174,7 @@ export default async function AdminPage({
                         <td className="px-4 py-3 text-xs text-gray-400 dark:text-slate-500">
                           {new Date(ticket.updatedAt).toLocaleDateString("tr-TR", {
                             month: "short", day: "numeric", hour: "2-digit", minute: "2-digit",
+                            timeZone: "Europe/Istanbul",
                           })}
                         </td>
                         <td className="px-4 py-3">

@@ -37,6 +37,7 @@ export default async function TrackPage({
         year: "numeric",
         month: "long",
         day: "numeric",
+        timeZone: "Europe/Istanbul",
       }),
     },
     ...(ticket.notes ? [{ label: "Notlar", value: ticket.notes }] : []),
@@ -80,6 +81,7 @@ export default async function TrackPage({
               day: "numeric",
               hour: "2-digit",
               minute: "2-digit",
+              timeZone: "Europe/Istanbul",
             })}
           </p>
         </div>
