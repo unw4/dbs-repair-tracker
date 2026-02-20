@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "./prisma";
-import { sendTrackingMessage, sendReadyMessage } from "./whatsapp";
+import { sendTrackingMessage, sendReadyMessage, sendDeliveredMessage } from "./whatsapp";
 
 export async function createTicket(
   customerName: string,
@@ -27,6 +27,9 @@ export async function updateTicketStatus(id: string, status: string) {
   });
   if (status === "Ready" && ticket.phone) {
     await sendReadyMessage(ticket.phone, ticket.id);
+  }
+  if (status === "Delivered" && ticket.phone) {
+    await sendDeliveredMessage(ticket.phone);
   }
   revalidatePath("/admin");
 }

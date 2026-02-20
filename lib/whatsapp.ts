@@ -3,6 +3,7 @@
 // Template "servis_hazir": body text + URL button pointing to APP_URL/track/{{1}}
 const TEMPLATE_TRACKING = "servis_kayit";
 const TEMPLATE_READY = "servis_hazir";
+const TEMPLATE_DELIVERED = "servis_tesekkur";
 
 async function sendWhatsAppTemplate(
   phone: string,
@@ -56,4 +57,8 @@ export async function sendTrackingMessage(phone: string, ticketId: string) {
 
 export async function sendReadyMessage(phone: string, ticketId: string) {
   await sendWhatsAppTemplate(phone, TEMPLATE_READY, []);
+}
+
+export async function sendDeliveredMessage(phone: string) {
+  await sendWhatsAppTemplate(phone, TEMPLATE_DELIVERED, []);
 }
