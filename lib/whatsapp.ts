@@ -19,7 +19,7 @@ async function sendWhatsAppTemplate(
     .replace(/^\+/, "")
     .replace(/^0/, "90");
 
-  await fetch(
+  const res = await fetch(
     `https://graph.facebook.com/v21.0/${phoneNumberId}/messages`,
     {
       method: "POST",
@@ -39,6 +39,8 @@ async function sendWhatsAppTemplate(
       }),
     }
   );
+  const data = await res.json();
+  console.log("[WhatsApp]", templateName, res.status, JSON.stringify(data));
 }
 
 export async function sendTrackingMessage(phone: string, ticketId: string) {
