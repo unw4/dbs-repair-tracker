@@ -1,4 +1,14 @@
-async function sendWhatsApp(phone: string, body: string) {
+// WhatsApp Message Template names — must match exactly what's approved in Meta WhatsApp Manager.
+// Template "servis_kayit": body text + URL button pointing to APP_URL/track/{{1}}
+// Template "servis_hazir": body text + URL button pointing to APP_URL/track/{{1}}
+const TEMPLATE_TRACKING = "servis_kayit";
+const TEMPLATE_READY = "servis_hazir";
+
+async function sendWhatsAppTemplate(
+  phone: string,
+  templateName: string,
+  components: object[]
+) {
   const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
   const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
 
@@ -9,7 +19,7 @@ async function sendWhatsApp(phone: string, body: string) {
     .replace(/^\+/, "")
     .replace(/^0/, "90");
 
-  const res = await fetch(
+  await fetch(
     `https://graph.facebook.com/v21.0/${phoneNumberId}/messages`,
     {
       method: "POST",
@@ -20,38 +30,35 @@ async function sendWhatsApp(phone: string, body: string) {
       body: JSON.stringify({
         messaging_product: "whatsapp",
         to: normalized,
-        type: "text",
-        text: { body },
+        type: "template",
+        template: {
+          name: templateName,
+          language: { code: "tr" },
+          components,
+        },
       }),
     }
   );
-
 }
 
 export async function sendTrackingMessage(phone: string, ticketId: string) {
-  const appUrl = process.env.APP_URL;
-  if (!appUrl) return;
-
-  const trackingUrl = `${appUrl}/track/${ticketId}`;
-  await sendWhatsApp(
-    phone,
-    `Merhaba! Cihazınız servis takip sistemimize kaydedildi.\n\n` +
-    `Takip linkiniz: ${trackingUrl}\n\n` +
-    `Bu link üzerinden servis durumunuzu anlık takip edebilirsiniz.\n` +
-    `— Denizli Bilgisayar Sistemleri`
-  );
+  await sendWhatsAppTemplate(phone, TEMPLATE_TRACKING, [
+    {
+      type: "button",
+      sub_type: "url",
+      index: 0,
+      parameters: [{ type: "text", text: ticketId }],
+    },
+  ]);
 }
 
 export async function sendReadyMessage(phone: string, ticketId: string) {
-  const appUrl = process.env.APP_URL;
-  if (!appUrl) return;
-
-  const trackingUrl = `${appUrl}/track/${ticketId}`;
-  await sendWhatsApp(
-    phone,
-    `Merhaba! Cihazınız servisten çıkmış ve teslime hazır durumdadır. ✓\n\n` +
-    `Takip linkiniz: ${trackingUrl}\n\n` +
-    `Cihazınızı mesai saatlerimiz içinde teslim alabilirsiniz.\n` +
-    `— Denizli Bilgisayar Sistemleri`
-  );
+  await sendWhatsAppTemplate(phone, TEMPLATE_READY, [
+    {
+      type: "button",
+      sub_type: "url",
+      index: 0,
+      parameters: [{ type: "text", text: ticketId }],
+    },
+  ]);
 }
