@@ -93,17 +93,17 @@ export default async function TrackPage({
           </h2>
           <div className="flex items-start">
             {applicableStatuses.map((status, i) => {
-              const isDone = i < currentStep;
+              const isDone = i <= currentStep;
               const isCurrent = i === currentStep;
               return (
                 <div key={status} className="flex items-start flex-1 last:flex-none">
                   <div className="flex flex-col items-center flex-shrink-0">
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all ${
-                        isDone
+                        isCurrent
+                          ? "bg-brand-dark border-brand-dark text-white ring-2 ring-brand-dark ring-offset-2"
+                          : isDone
                           ? "bg-brand-dark border-brand-dark text-white"
-                          : isCurrent
-                          ? "bg-white dark:bg-slate-800 border-brand-dark text-brand-dark dark:text-brand"
                           : "bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-600 text-gray-300 dark:text-slate-600"
                       }`}
                     >
