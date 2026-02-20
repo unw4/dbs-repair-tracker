@@ -1,4 +1,4 @@
-export const JOB_TYPES = ["Parça Değişimi", "Servis", "Parça Değişimi + Servis"] as const;
+export const JOB_TYPES = ["Parça Değişimi", "Servis", "Parça Değişimi + Servis", "Veri Kurtarma"] as const;
 export type JobType = (typeof JOB_TYPES)[number];
 
 export const STATUSES = [
