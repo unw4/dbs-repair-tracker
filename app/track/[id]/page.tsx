@@ -4,6 +4,7 @@ import { STATUS_LABELS, getApplicableStatuses } from "@/lib/constants";
 import { notFound } from "next/navigation";
 import TrackFooter from "@/app/components/TrackFooter";
 import DarkModeToggle from "@/app/components/DarkModeToggle";
+import TermsForm from "./TermsForm";
 
 const STATUS_BADGE: Record<string, string> = {
   Received: "bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
@@ -22,6 +23,8 @@ export default async function TrackPage({
   const ticket = await getTicketByUuid(id);
 
   if (!ticket) notFound();
+
+  if (!ticket.termsAccepted) return <TermsForm ticketId={ticket.id} />;
 
   const applicableStatuses = getApplicableStatuses(ticket.jobType);
   const currentStep = applicableStatuses.indexOf(ticket.status);

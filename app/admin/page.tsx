@@ -178,13 +178,20 @@ export default async function AdminPage({
                           })}
                         </td>
                         <td className="px-4 py-3">
-                          <a
-                            href={`/track/${ticket.id}`}
-                            target="_blank"
-                            className="text-xs text-gray-400 dark:text-slate-500 hover:text-brand-dark dark:hover:text-slate-200 underline underline-offset-2 hover:no-underline font-mono transition-colors"
-                          >
-                            /track/{ticket.id.slice(0, 6)}…
-                          </a>
+                          <div className="flex flex-col gap-1">
+                            <a
+                              href={`/track/${ticket.id}`}
+                              target="_blank"
+                              className="text-xs text-gray-400 dark:text-slate-500 hover:text-brand-dark dark:hover:text-slate-200 underline underline-offset-2 hover:no-underline font-mono transition-colors"
+                            >
+                              /track/{ticket.id.slice(0, 6)}…
+                            </a>
+                            {ticket.termsAccepted ? (
+                              <span className="text-xs text-green-600 dark:text-green-400 font-medium">✓ Onaylandı</span>
+                            ) : (
+                              <span className="text-xs text-gray-300 dark:text-slate-600">Onay bekleniyor</span>
+                            )}
+                          </div>
                         </td>
                         <td className="px-4 py-3">
                           <EditTicketModal

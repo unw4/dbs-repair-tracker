@@ -54,3 +54,10 @@ export async function deleteTicket(id: string) {
 export async function getTicketByUuid(id: string) {
   return prisma.ticket.findUnique({ where: { id } });
 }
+
+export async function acceptTerms(id: string) {
+  await prisma.ticket.update({
+    where: { id },
+    data: { termsAccepted: true, termsAcceptedAt: new Date() },
+  });
+}

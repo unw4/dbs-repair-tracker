@@ -18,6 +18,8 @@ model Ticket {
   jobType      String   @default("Servis")
   phone        String?
   notes        String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  termsAccepted   Boolean   @default(false)
+  termsAcceptedAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
