@@ -55,12 +55,5 @@ export async function sendTrackingMessage(phone: string, ticketId: string) {
 }
 
 export async function sendReadyMessage(phone: string, ticketId: string) {
-  await sendWhatsAppTemplate(phone, TEMPLATE_READY, [
-    {
-      type: "button",
-      sub_type: "url",
-      index: 0,
-      parameters: [{ type: "text", text: ticketId }],
-    },
-  ]);
+  await sendWhatsAppTemplate(phone, TEMPLATE_READY, []);
 }
