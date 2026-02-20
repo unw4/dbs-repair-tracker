@@ -2,8 +2,6 @@ async function sendWhatsApp(phone: string, body: string) {
   const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
   const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
 
-  console.log("[WA] called:", { hasId: !!phoneNumberId, hasToken: !!accessToken, phone });
-
   if (!phoneNumberId || !accessToken) return;
 
   const normalized = phone
@@ -28,8 +26,6 @@ async function sendWhatsApp(phone: string, body: string) {
     }
   );
 
-  const json = await res.json();
-  console.log("[WA] response:", JSON.stringify(json));
 }
 
 export async function sendTrackingMessage(phone: string, ticketId: string) {
