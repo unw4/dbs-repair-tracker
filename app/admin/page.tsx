@@ -45,7 +45,7 @@ export default async function AdminPage({
   const { status, q } = await searchParams;
   const activeStatus = status && status !== "all" ? status : null;
   const showOverdue = status === "overdue";
-  const query = q?.trim().toLowerCase() ?? "";
+  const query = q?.trim().toLowerCase().slice(0, 100) ?? "";
 
   const allTickets = await prisma.ticket.findMany({ orderBy: { createdAt: "desc" } });
 

@@ -3,6 +3,20 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "./prisma";
 import { sendTrackingMessage, sendReadyMessage, sendDeliveredMessage } from "./whatsapp";
+import { getSession } from "./session";
+import { STATUSES, JOB_TYPES } from "./constants";
+
+async function requireAdmin() {
+  const session = await getSession();
+  if (!session.isLoggedIn) throw new Error("Unauthorized");
+}
+
+function sanitize(value: string | undefined, maxLength: number, required = false): string | undefined {
+  if (required && (!value || !value.trim())) throw new Error("Required field missing");
+  if (value === undefined || value === null) return undefined;
+  const trimmed = value.trim().slice(0, maxLength);
+  return trimmed || undefined;
+}
 
 export async function createTicket(
   customerName: string,
@@ -11,27 +25,50 @@ export async function createTicket(
   phone?: string,
   notes?: string
 ) {
-  const ticket = await prisma.ticket.create({
-    data: { customerName, deviceModel, jobType, phone, notes },
-  });
-  if (phone) {
-    await sendTrackingMessage(phone, ticket.id);
+  await requireAdmin();
+
+  const name = sanitize(customerName, 100, true)!;
+  const device = sanitize(deviceModel, 100, true)!;
+  const cleanNotes = sanitize(notes, 1000);
+  const cleanPhone = sanitize(phone, 20);
+
+  if (!(JOB_TYPES as readonly string[]).includes(jobType)) throw new Error("Invalid job type");
+
+  try {
+    const ticket = await prisma.ticket.create({
+      data: { customerName: name, deviceModel: device, jobType, phone: cleanPhone ?? null, notes: cleanNotes ?? null },
+    });
+    if (cleanPhone) {
+      await sendTrackingMessage(cleanPhone, ticket.id);
+    }
+    revalidatePath("/admin");
+  } catch (e) {
+    console.error("[createTicket]", e instanceof Error ? e.message : "Unknown error");
+    throw new Error("Failed to create ticket");
   }
-  revalidatePath("/admin");
 }
 
 export async function updateTicketStatus(id: string, status: string) {
-  const ticket = await prisma.ticket.update({
-    where: { id },
-    data: { status },
-  });
-  if (status === "Ready" && ticket.phone) {
-    await sendReadyMessage(ticket.phone, ticket.id);
+  await requireAdmin();
+
+  if (!(STATUSES as readonly string[]).includes(status)) throw new Error("Invalid status");
+
+  try {
+    const ticket = await prisma.ticket.update({
+      where: { id },
+      data: { status },
+    });
+    if (status === "Ready" && ticket.phone) {
+      await sendReadyMessage(ticket.phone, ticket.id);
+    }
+    if (status === "Delivered" && ticket.phone) {
+      await sendDeliveredMessage(ticket.phone);
+    }
+    revalidatePath("/admin");
+  } catch (e) {
+    console.error("[updateTicketStatus]", e instanceof Error ? e.message : "Unknown error");
+    throw new Error("Failed to update status");
   }
-  if (status === "Delivered" && ticket.phone) {
-    await sendDeliveredMessage(ticket.phone);
-  }
-  revalidatePath("/admin");
 }
 
 export async function updateTicket(
@@ -42,25 +79,56 @@ export async function updateTicket(
   phone?: string,
   notes?: string
 ) {
-  await prisma.ticket.update({
-    where: { id },
-    data: { customerName, deviceModel, jobType, phone: phone || null, notes: notes || null },
-  });
-  revalidatePath("/admin");
+  await requireAdmin();
+
+  const name = sanitize(customerName, 100, true)!;
+  const device = sanitize(deviceModel, 100, true)!;
+  const cleanNotes = sanitize(notes, 1000);
+  const cleanPhone = sanitize(phone, 20);
+
+  if (!(JOB_TYPES as readonly string[]).includes(jobType)) throw new Error("Invalid job type");
+
+  try {
+    await prisma.ticket.update({
+      where: { id },
+      data: { customerName: name, deviceModel: device, jobType, phone: cleanPhone ?? null, notes: cleanNotes ?? null },
+    });
+    revalidatePath("/admin");
+  } catch (e) {
+    console.error("[updateTicket]", e instanceof Error ? e.message : "Unknown error");
+    throw new Error("Failed to update ticket");
+  }
 }
 
 export async function deleteTicket(id: string) {
-  await prisma.ticket.delete({ where: { id } });
-  revalidatePath("/admin");
+  await requireAdmin();
+
+  try {
+    await prisma.ticket.delete({ where: { id } });
+    revalidatePath("/admin");
+  } catch (e) {
+    console.error("[deleteTicket]", e instanceof Error ? e.message : "Unknown error");
+    throw new Error("Failed to delete ticket");
+  }
 }
 
 export async function getTicketByUuid(id: string) {
-  return prisma.ticket.findUnique({ where: { id } });
+  if (!id || typeof id !== "string" || id.length > 50) return null;
+  try {
+    return await prisma.ticket.findUnique({ where: { id } });
+  } catch {
+    return null;
+  }
 }
 
 export async function acceptTerms(id: string) {
-  await prisma.ticket.update({
-    where: { id },
-    data: { termsAccepted: true, termsAcceptedAt: new Date() },
-  });
+  if (!id || typeof id !== "string" || id.length > 50) return;
+  try {
+    await prisma.ticket.update({
+      where: { id },
+      data: { termsAccepted: true, termsAcceptedAt: new Date() },
+    });
+  } catch {
+    // Silently fail — not security-critical
+  }
 }

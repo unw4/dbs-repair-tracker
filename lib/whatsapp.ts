@@ -5,6 +5,11 @@ const TEMPLATE_TRACKING = "servis_kayit";
 const TEMPLATE_READY = "servis_hazir";
 const TEMPLATE_DELIVERED = "servis_tesekkur";
 
+function maskPhone(phone: string): string {
+  if (phone.length <= 4) return "****";
+  return "*".repeat(phone.length - 4) + phone.slice(-4);
+}
+
 async function sendWhatsAppTemplate(
   phone: string,
   templateName: string,
@@ -20,28 +25,41 @@ async function sendWhatsAppTemplate(
     .replace(/^\+/, "")
     .replace(/^0/, "90");
 
-  const res = await fetch(
-    `https://graph.facebook.com/v21.0/${phoneNumberId}/messages`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        messaging_product: "whatsapp",
-        to: normalized,
-        type: "template",
-        template: {
-          name: templateName,
-          language: { code: "tr" },
-          components,
+  if (!/^\d{10,15}$/.test(normalized)) {
+    console.warn("[WhatsApp] Invalid phone format for template:", templateName);
+    return;
+  }
+
+  try {
+    const res = await fetch(
+      `https://graph.facebook.com/v21.0/${phoneNumberId}/messages`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
         },
-      }),
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          to: normalized,
+          type: "template",
+          template: {
+            name: templateName,
+            language: { code: "tr" },
+            components,
+          },
+        }),
+      }
+    );
+
+    if (process.env.NODE_ENV !== "production") {
+      console.log("[WhatsApp]", templateName, res.status, maskPhone(normalized));
+    } else if (!res.ok) {
+      console.error("[WhatsApp] Failed:", templateName, res.status);
     }
-  );
-  const data = await res.json();
-  console.log("[WhatsApp]", templateName, res.status, JSON.stringify(data));
+  } catch (e) {
+    console.error("[WhatsApp] Network error:", templateName, e instanceof Error ? e.message : "Unknown");
+  }
 }
 
 export async function sendTrackingMessage(phone: string, ticketId: string) {
