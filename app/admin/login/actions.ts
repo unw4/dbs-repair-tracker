@@ -5,11 +5,18 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
 import { headers } from "next/headers";
 
-// In-memory rate limiter: max 5 attempts per IP per 15 minutes
+// In-memory rate limiter: max 5 attempts per IP per 15 minutes.
+// Note: resets on server restart — acceptable for single-instance deployments.
 const loginAttempts = new Map<string, { count: number; resetAt: number }>();
 
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
+
+  // Purge expired entries to prevent unbounded memory growth
+  for (const [key, val] of loginAttempts) {
+    if (now > val.resetAt) loginAttempts.delete(key);
+  }
+
   const record = loginAttempts.get(ip);
 
   if (!record || now > record.resetAt) {

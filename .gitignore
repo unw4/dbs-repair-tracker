@@ -47,3 +47,6 @@ next-env.d.ts
 *.db-journal
 *.db-wal
 *.db-shm
+
+# Admin routes
+/app/admin/

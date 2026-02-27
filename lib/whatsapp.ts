@@ -5,11 +5,6 @@ const TEMPLATE_TRACKING = "servis_kayit";
 const TEMPLATE_READY = "servis_hazir";
 const TEMPLATE_DELIVERED = "servis_tesekkur";
 
-function maskPhone(phone: string): string {
-  if (phone.length <= 4) return "****";
-  return "*".repeat(phone.length - 4) + phone.slice(-4);
-}
-
 async function sendWhatsAppTemplate(
   phone: string,
   templateName: string,
@@ -30,24 +25,6 @@ async function sendWhatsAppTemplate(
     return;
   }
 
-  const payload = {
-    messaging_product: "whatsapp",
-    to: normalized,
-    type: "template",
-    template: {
-      name: templateName,
-      language: { code: "tr" },
-      components,
-    },
-  };
-
-  console.log("[WhatsApp] Sending →", {
-    template: templateName,
-    to: maskPhone(normalized),
-    components,
-    phoneNumberId,
-  });
-
   try {
     const res = await fetch(
       `https://graph.facebook.com/v21.0/${phoneNumberId}/messages`,
@@ -57,38 +34,24 @@ async function sendWhatsAppTemplate(
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          to: normalized,
+          type: "template",
+          template: {
+            name: templateName,
+            language: { code: "tr" },
+            components,
+          },
+        }),
       }
     );
 
-    let responseBody: unknown;
-    try {
-      responseBody = await res.json();
-    } catch {
-      responseBody = await res.text().catch(() => "(empty)");
-    }
-
-    if (res.ok) {
-      console.log("[WhatsApp] Success ✓", {
-        template: templateName,
-        to: maskPhone(normalized),
-        status: res.status,
-        response: responseBody,
-      });
-    } else {
-      console.error("[WhatsApp] API Error ✗", {
-        template: templateName,
-        to: maskPhone(normalized),
-        status: res.status,
-        response: responseBody,
-      });
+    if (!res.ok) {
+      console.error("[WhatsApp] Failed:", templateName, res.status);
     }
   } catch (e) {
-    console.error("[WhatsApp] Network error ✗", {
-      template: templateName,
-      to: maskPhone(normalized),
-      error: e instanceof Error ? e.message : String(e),
-    });
+    console.error("[WhatsApp] Network error:", templateName, e instanceof Error ? e.message : "Unknown");
   }
 }
 

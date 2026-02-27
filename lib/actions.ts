@@ -112,8 +112,10 @@ export async function deleteTicket(id: string) {
   }
 }
 
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export async function getTicketByUuid(id: string) {
-  if (!id || typeof id !== "string" || id.length > 50) return null;
+  if (!id || typeof id !== "string" || !UUID_REGEX.test(id)) return null;
   try {
     return await prisma.ticket.findUnique({ where: { id } });
   } catch {
@@ -122,7 +124,7 @@ export async function getTicketByUuid(id: string) {
 }
 
 export async function acceptTerms(id: string) {
-  if (!id || typeof id !== "string" || id.length > 50) return;
+  if (!id || typeof id !== "string" || !UUID_REGEX.test(id)) return;
   try {
     await prisma.ticket.update({
       where: { id },
