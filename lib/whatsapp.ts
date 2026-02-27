@@ -30,6 +30,24 @@ async function sendWhatsAppTemplate(
     return;
   }
 
+  const payload = {
+    messaging_product: "whatsapp",
+    to: normalized,
+    type: "template",
+    template: {
+      name: templateName,
+      language: { code: "tr" },
+      components,
+    },
+  };
+
+  console.log("[WhatsApp] Sending →", {
+    template: templateName,
+    to: maskPhone(normalized),
+    components,
+    phoneNumberId,
+  });
+
   try {
     const res = await fetch(
       `https://graph.facebook.com/v21.0/${phoneNumberId}/messages`,
@@ -39,26 +57,38 @@ async function sendWhatsAppTemplate(
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          messaging_product: "whatsapp",
-          to: normalized,
-          type: "template",
-          template: {
-            name: templateName,
-            language: { code: "tr" },
-            components,
-          },
-        }),
+        body: JSON.stringify(payload),
       }
     );
 
-    if (process.env.NODE_ENV !== "production") {
-      console.log("[WhatsApp]", templateName, res.status, maskPhone(normalized));
-    } else if (!res.ok) {
-      console.error("[WhatsApp] Failed:", templateName, res.status);
+    let responseBody: unknown;
+    try {
+      responseBody = await res.json();
+    } catch {
+      responseBody = await res.text().catch(() => "(empty)");
+    }
+
+    if (res.ok) {
+      console.log("[WhatsApp] Success ✓", {
+        template: templateName,
+        to: maskPhone(normalized),
+        status: res.status,
+        response: responseBody,
+      });
+    } else {
+      console.error("[WhatsApp] API Error ✗", {
+        template: templateName,
+        to: maskPhone(normalized),
+        status: res.status,
+        response: responseBody,
+      });
     }
   } catch (e) {
-    console.error("[WhatsApp] Network error:", templateName, e instanceof Error ? e.message : "Unknown");
+    console.error("[WhatsApp] Network error ✗", {
+      template: templateName,
+      to: maskPhone(normalized),
+      error: e instanceof Error ? e.message : String(e),
+    });
   }
 }
 
@@ -73,7 +103,7 @@ export async function sendTrackingMessage(phone: string, ticketId: string) {
   ]);
 }
 
-export async function sendReadyMessage(phone: string, ticketId: string) {
+export async function sendReadyMessage(phone: string, _ticketId: string) {
   await sendWhatsAppTemplate(phone, TEMPLATE_READY, []);
 }
 
