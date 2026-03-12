@@ -12,6 +12,8 @@ export function IconWrench({ className = "w-5 h-5" }: IconProps) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      width="20"
+      height="20"
       className={className}
       aria-hidden="true"
     >
@@ -30,6 +32,8 @@ export function IconFolder({ className = "w-5 h-5" }: IconProps) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      width="20"
+      height="20"
       className={className}
       aria-hidden="true"
     >
@@ -48,6 +52,8 @@ export function IconInbox({ className = "w-5 h-5" }: IconProps) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      width="20"
+      height="20"
       className={className}
       aria-hidden="true"
     >
@@ -67,6 +73,8 @@ export function IconHourglass({ className = "w-5 h-5" }: IconProps) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      width="20"
+      height="20"
       className={className}
       aria-hidden="true"
     >
@@ -88,6 +96,8 @@ export function IconCheck({ className = "w-5 h-5" }: IconProps) {
       strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
+      width="20"
+      height="20"
       className={className}
       aria-hidden="true"
     >
@@ -106,6 +116,8 @@ export function IconAlert({ className = "w-5 h-5" }: IconProps) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      width="20"
+      height="20"
       className={className}
       aria-hidden="true"
     >
@@ -126,6 +138,8 @@ export function IconPackage({ className = "w-5 h-5" }: IconProps) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      width="20"
+      height="20"
       className={className}
       aria-hidden="true"
     >
