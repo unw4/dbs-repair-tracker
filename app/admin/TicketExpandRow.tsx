@@ -75,14 +75,14 @@ export default function TicketExpandRow({ ticket, isOverdue }: Props) {
       <tr
         className={`border-b border-gray-50 dark:border-slate-700/50 transition-colors cursor-pointer select-none ${
           open
-            ? "bg-blue-50/40 dark:bg-slate-700/40"
+            ? "bg-brand-subtle dark:bg-slate-700/50"
             : "hover:bg-gray-50 dark:hover:bg-slate-700/30"
         }`}
         onClick={() => setOpen((v) => !v)}
       >
         <td className="px-4 py-3 font-mono text-xs text-gray-400 dark:text-slate-500">
           <div className="flex items-center gap-2">
-            <span className={`text-gray-300 dark:text-slate-600 transition-colors ${open ? "text-brand-dark dark:text-brand" : ""}`}>
+            <span className={`transition-colors ${open ? "text-brand-dark dark:text-brand" : "text-gray-300 dark:text-slate-600"}`}>
               <ChevronIcon open={open} />
             </span>
             {ticket.id.slice(0, 8)}…
@@ -157,80 +157,70 @@ export default function TicketExpandRow({ ticket, isOverdue }: Props) {
 
       {/* Detay paneli */}
       {open && (
-        <tr className="border-b-2 border-brand-light dark:border-slate-700">
-          <td colSpan={10} className="bg-gradient-to-b from-blue-50/60 to-white dark:from-slate-800/80 dark:to-slate-900/60 px-6 py-5">
-            <div className="flex gap-3">
+        <tr className="border-b border-brand-light dark:border-slate-700">
+          <td colSpan={10} className="bg-brand-subtle dark:bg-slate-800/80 px-6 py-4">
+            <div className="flex gap-6 min-w-0">
 
-              {/* Sol: Zaman kartları */}
-              <div className="flex gap-3 flex-shrink-0">
-
-                {/* Açılalı */}
-                <div className={`rounded-xl px-4 py-3 flex flex-col gap-0.5 min-w-[100px] border ${
-                  daysOpen >= 3
-                    ? "bg-orange-50 border-orange-200 dark:bg-orange-900/20 dark:border-orange-700/40"
-                    : "bg-white border-gray-100 dark:bg-slate-700/50 dark:border-slate-600/50"
+              {/* Açılalı */}
+              <div className="flex flex-col gap-0.5 flex-shrink-0 w-28 border-r border-brand-light dark:border-slate-600 pr-6">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted dark:text-slate-500">
+                  Açılalı
+                </span>
+                <span className={`text-2xl font-bold tabular-nums leading-none mt-0.5 ${
+                  daysOpen >= 3 ? "text-orange-500" : "text-brand-dark dark:text-slate-100"
                 }`}>
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-slate-500">
-                    Açılalı
-                  </span>
-                  <span className={`text-xl font-bold leading-tight tabular-nums ${
-                    daysOpen >= 3 ? "text-orange-500" : "text-brand-dark dark:text-slate-100"
-                  }`}>
-                    {daysOpen === 0 ? "Bugün" : `${daysOpen}g`}
-                  </span>
-                  <span className="text-[10px] text-gray-400 dark:text-slate-500 leading-tight">
-                    {formatDate(ticket.createdAt)}
-                  </span>
-                </div>
-
-                {/* Son güncelleme */}
-                <div className="rounded-xl px-4 py-3 flex flex-col gap-0.5 min-w-[100px] bg-white border border-gray-100 dark:bg-slate-700/50 dark:border-slate-600/50">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-slate-500">
-                    Güncellendi
-                  </span>
-                  <span className="text-xl font-bold leading-tight tabular-nums text-brand-dark dark:text-slate-100">
-                    {daysUpdated === 0 ? "Bugün" : `${daysUpdated}g`}
-                  </span>
-                  <span className="text-[10px] text-gray-400 dark:text-slate-500 leading-tight">
-                    {formatDate(ticket.updatedAt)}
-                  </span>
-                </div>
-
-                {/* Sözleşme */}
-                <div className={`rounded-xl px-4 py-3 flex flex-col gap-0.5 min-w-[110px] border ${
-                  ticket.termsAccepted
-                    ? "bg-green-50 border-green-100 dark:bg-green-900/20 dark:border-green-700/40"
-                    : "bg-white border-gray-100 dark:bg-slate-700/50 dark:border-slate-600/50"
-                }`}>
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-slate-500">
-                    Sözleşme
-                  </span>
-                  {ticket.termsAccepted ? (
-                    <>
-                      <span className="text-sm font-bold text-green-600 dark:text-green-400">✓ Onaylandı</span>
-                      {ticket.termsAcceptedAt && (
-                        <span className="text-[10px] text-gray-400 dark:text-slate-500 leading-tight">
-                          {formatDate(ticket.termsAcceptedAt)}
-                        </span>
-                      )}
-                    </>
-                  ) : (
-                    <span className="text-sm font-bold text-gray-400 dark:text-slate-500">Bekleniyor</span>
-                  )}
-                </div>
+                  {daysOpen === 0 ? "0" : daysOpen}
+                  <span className="text-sm font-semibold ml-0.5">gün</span>
+                </span>
+                <span className="text-[10px] text-brand-muted dark:text-slate-500 mt-1 leading-tight">
+                  {formatDate(ticket.createdAt)}
+                </span>
               </div>
 
-              {/* Sağ: Notlar */}
-              <div className="flex-1 rounded-xl px-4 py-3 bg-white border border-gray-100 dark:bg-slate-700/50 dark:border-slate-600/50 min-h-[80px]">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-slate-500 block mb-1.5">
+              {/* Güncellendi */}
+              <div className="flex flex-col gap-0.5 flex-shrink-0 w-28 border-r border-brand-light dark:border-slate-600 pr-6">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted dark:text-slate-500">
+                  Güncellendi
+                </span>
+                <span className="text-2xl font-bold tabular-nums leading-none mt-0.5 text-brand-dark dark:text-slate-100">
+                  {daysUpdated === 0 ? "0" : daysUpdated}
+                  <span className="text-sm font-semibold ml-0.5">gün</span>
+                </span>
+                <span className="text-[10px] text-brand-muted dark:text-slate-500 mt-1 leading-tight">
+                  {formatDate(ticket.updatedAt)}
+                </span>
+              </div>
+
+              {/* Sözleşme */}
+              <div className="flex flex-col gap-0.5 flex-shrink-0 w-36 border-r border-brand-light dark:border-slate-600 pr-6">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted dark:text-slate-500">
+                  Sözleşme
+                </span>
+                {ticket.termsAccepted ? (
+                  <>
+                    <span className="text-sm font-bold text-green-600 dark:text-green-400 mt-0.5">✓ Onaylandı</span>
+                    {ticket.termsAcceptedAt && (
+                      <span className="text-[10px] text-brand-muted dark:text-slate-500 mt-1 leading-tight">
+                        {formatDate(ticket.termsAcceptedAt)}
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <span className="text-sm font-bold text-gray-400 dark:text-slate-500 mt-0.5">Bekleniyor</span>
+                )}
+              </div>
+
+              {/* Notlar */}
+              <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted dark:text-slate-500">
                   Notlar
                 </span>
                 {ticket.notes ? (
-                  <p className="text-sm text-brand-dark dark:text-slate-200 leading-relaxed whitespace-pre-wrap">
+                  <p className="text-sm text-brand-dark dark:text-slate-200 leading-relaxed whitespace-pre-wrap mt-0.5">
                     {ticket.notes}
                   </p>
                 ) : (
-                  <span className="text-sm text-gray-300 dark:text-slate-600 italic">Not eklenmemiş</span>
+                  <span className="text-sm text-gray-400 dark:text-slate-500 italic mt-0.5">Not eklenmemiş</span>
                 )}
               </div>
 
