@@ -159,10 +159,10 @@ export default function TicketExpandRow({ ticket, isOverdue }: Props) {
       {open && (
         <tr className="border-b border-brand-light dark:border-slate-700">
           <td colSpan={10} className="bg-brand-subtle dark:bg-slate-800/80 px-8 py-6">
-            <div className="flex gap-10 min-w-0">
+            <div className="grid grid-cols-[160px_160px_180px_1fr] gap-8">
 
               {/* Açılalı */}
-              <div className="flex flex-col gap-2 flex-shrink-0 w-32 border-r border-brand-light dark:border-slate-600 pr-10">
+              <div className="flex flex-col gap-2">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted dark:text-slate-500">
                   Açılalı
                 </span>
@@ -178,7 +178,7 @@ export default function TicketExpandRow({ ticket, isOverdue }: Props) {
               </div>
 
               {/* Güncellendi */}
-              <div className="flex flex-col gap-2 flex-shrink-0 w-32 border-r border-brand-light dark:border-slate-600 pr-10">
+              <div className="flex flex-col gap-2">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted dark:text-slate-500">
                   Güncellendi
                 </span>
@@ -192,7 +192,7 @@ export default function TicketExpandRow({ ticket, isOverdue }: Props) {
               </div>
 
               {/* Sözleşme */}
-              <div className="flex flex-col gap-2 flex-shrink-0 w-40 border-r border-brand-light dark:border-slate-600 pr-10">
+              <div className="flex flex-col gap-2">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted dark:text-slate-500">
                   Sözleşme
                 </span>
@@ -211,7 +211,7 @@ export default function TicketExpandRow({ ticket, isOverdue }: Props) {
               </div>
 
               {/* Notlar */}
-              <div className="flex flex-col gap-2 flex-1 min-w-0">
+              <div className="flex flex-col gap-2">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted dark:text-slate-500">
                   Notlar
                 </span>
