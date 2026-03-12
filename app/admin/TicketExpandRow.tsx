@@ -158,51 +158,41 @@ export default function TicketExpandRow({ ticket, isOverdue }: Props) {
       {/* Detay paneli */}
       {open && (
         <tr className="border-b border-brand-light dark:border-slate-700">
-          <td colSpan={10} className="bg-brand-subtle dark:bg-slate-800/80 px-8 py-6">
-            <div className="grid gap-8" style={{ gridTemplateColumns: "160px 160px 180px 1fr" }}>
+          <td colSpan={10} className="bg-brand-subtle dark:bg-slate-800/80" style={{ padding: "24px 32px" }}>
+            <div style={{ display: "flex", flexDirection: "row", gap: "32px", alignItems: "flex-start" }}>
 
               {/* Açılalı */}
-              <div className="flex flex-col gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted dark:text-slate-500">
-                  Açılalı
-                </span>
-                <span className={`text-2xl font-bold tabular-nums leading-none ${
-                  daysOpen >= 3 ? "text-orange-500" : "text-brand-dark dark:text-slate-100"
-                }`}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px", flexShrink: 0, width: "150px" }}>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted dark:text-slate-500">Açılalı</span>
+                <span className={`text-2xl font-bold tabular-nums ${daysOpen >= 3 ? "text-orange-500" : "text-brand-dark dark:text-slate-100"}`}>
                   {daysOpen === 0 ? "0" : daysOpen}
-                  <span className="text-sm font-semibold ml-1">gün</span>
+                  <span className="text-sm font-semibold" style={{ marginLeft: "4px" }}>gün</span>
                 </span>
-                <span className="text-xs text-brand-muted dark:text-slate-500 leading-snug">
-                  {formatDate(ticket.createdAt)}
-                </span>
+                <span className="text-xs text-brand-muted dark:text-slate-500">{formatDate(ticket.createdAt)}</span>
               </div>
+
+              <div style={{ width: "1px", alignSelf: "stretch", backgroundColor: "var(--color-brand-light)", opacity: 0.6 }} />
 
               {/* Güncellendi */}
-              <div className="flex flex-col gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted dark:text-slate-500">
-                  Güncellendi
-                </span>
-                <span className="text-2xl font-bold tabular-nums leading-none text-brand-dark dark:text-slate-100">
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px", flexShrink: 0, width: "150px" }}>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted dark:text-slate-500">Güncellendi</span>
+                <span className="text-2xl font-bold tabular-nums text-brand-dark dark:text-slate-100">
                   {daysUpdated === 0 ? "0" : daysUpdated}
-                  <span className="text-sm font-semibold ml-1">gün</span>
+                  <span className="text-sm font-semibold" style={{ marginLeft: "4px" }}>gün</span>
                 </span>
-                <span className="text-xs text-brand-muted dark:text-slate-500 leading-snug">
-                  {formatDate(ticket.updatedAt)}
-                </span>
+                <span className="text-xs text-brand-muted dark:text-slate-500">{formatDate(ticket.updatedAt)}</span>
               </div>
 
+              <div style={{ width: "1px", alignSelf: "stretch", backgroundColor: "var(--color-brand-light)", opacity: 0.6 }} />
+
               {/* Sözleşme */}
-              <div className="flex flex-col gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted dark:text-slate-500">
-                  Sözleşme
-                </span>
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px", flexShrink: 0, width: "170px" }}>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted dark:text-slate-500">Sözleşme</span>
                 {ticket.termsAccepted ? (
                   <>
                     <span className="text-sm font-bold text-green-600 dark:text-green-400">✓ Onaylandı</span>
                     {ticket.termsAcceptedAt && (
-                      <span className="text-xs text-brand-muted dark:text-slate-500 leading-snug">
-                        {formatDate(ticket.termsAcceptedAt)}
-                      </span>
+                      <span className="text-xs text-brand-muted dark:text-slate-500">{formatDate(ticket.termsAcceptedAt)}</span>
                     )}
                   </>
                 ) : (
@@ -210,15 +200,13 @@ export default function TicketExpandRow({ ticket, isOverdue }: Props) {
                 )}
               </div>
 
+              <div style={{ width: "1px", alignSelf: "stretch", backgroundColor: "var(--color-brand-light)", opacity: 0.6 }} />
+
               {/* Notlar */}
-              <div className="flex flex-col gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted dark:text-slate-500">
-                  Notlar
-                </span>
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px", flex: 1, minWidth: 0 }}>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted dark:text-slate-500">Notlar</span>
                 {ticket.notes ? (
-                  <p className="text-sm text-brand-dark dark:text-slate-200 leading-relaxed whitespace-pre-wrap">
-                    {ticket.notes}
-                  </p>
+                  <p className="text-sm text-brand-dark dark:text-slate-200 leading-relaxed whitespace-pre-wrap">{ticket.notes}</p>
                 ) : (
                   <span className="text-sm text-gray-400 dark:text-slate-500 italic">Not eklenmemiş</span>
                 )}
