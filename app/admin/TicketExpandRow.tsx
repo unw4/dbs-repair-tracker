@@ -140,25 +140,12 @@ export default function TicketExpandRow({ ticket, isOverdue }: Props) {
             )}
           </div>
         </td>
-        <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
-          <EditTicketModal
-            id={ticket.id}
-            customerName={ticket.customerName}
-            deviceModel={ticket.deviceModel}
-            jobType={ticket.jobType}
-            phone={ticket.phone}
-            notes={ticket.notes}
-          />
-        </td>
-        <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
-          <DeleteTicketButton id={ticket.id} />
-        </td>
       </tr>
 
       {/* Detay paneli */}
       {open && (
         <tr className="border-b border-brand-light dark:border-slate-700">
-          <td colSpan={10} className="bg-brand-subtle dark:bg-slate-800/80" style={{ padding: "24px 32px" }}>
+          <td colSpan={8} className="bg-brand-subtle dark:bg-slate-800/80" style={{ padding: "24px 32px" }}>
             <div style={{ display: "flex", flexDirection: "row", gap: "32px", alignItems: "flex-start" }}>
 
               {/* Açılalı */}
@@ -210,6 +197,21 @@ export default function TicketExpandRow({ ticket, isOverdue }: Props) {
                 ) : (
                   <span className="text-sm text-gray-400 dark:text-slate-500 italic">Not eklenmemiş</span>
                 )}
+              </div>
+
+              <div style={{ width: "1px", alignSelf: "stretch", backgroundColor: "var(--color-brand-light)", opacity: 0.6 }} />
+
+              {/* Aksiyonlar */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px", flexShrink: 0, justifyContent: "center" }}>
+                <EditTicketModal
+                  id={ticket.id}
+                  customerName={ticket.customerName}
+                  deviceModel={ticket.deviceModel}
+                  jobType={ticket.jobType}
+                  phone={ticket.phone}
+                  notes={ticket.notes}
+                />
+                <DeleteTicketButton id={ticket.id} />
               </div>
 
             </div>
