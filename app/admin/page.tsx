@@ -215,7 +215,7 @@ export default async function AdminPage({
           </div>
 
           {/* Sağ Sidebar */}
-          <div className="w-48 flex-shrink-0 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
+          <div className="w-56 flex-shrink-0 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
             <div className="px-3 py-2.5 border-b border-gray-100 dark:border-slate-700">
               <span className="text-xs font-semibold text-gray-400 dark:text-slate-500 uppercase tracking-wider">
                 Klasörler
