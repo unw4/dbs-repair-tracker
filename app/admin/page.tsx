@@ -12,20 +12,11 @@ import {
   IconAlert,
 } from "@/app/components/Icons";
 import NewTicketForm from "./NewTicketForm";
-import StatusSelect from "./StatusSelect";
 import SearchBar from "./SearchBar";
-import EditTicketModal from "./EditTicketModal";
-import DeleteTicketButton from "./DeleteTicketButton";
 import DarkModeToggle from "@/app/components/DarkModeToggle";
+import TicketExpandRow from "./TicketExpandRow";
 import type { ReactNode } from "react";
 
-const STATUS_BADGE: Record<string, string> = {
-  Received: "bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
-  "In Progress": "bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300",
-  "Waiting for Parts": "bg-orange-50 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300",
-  Ready: "bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300",
-  Delivered: "bg-gray-100 text-gray-500 dark:bg-slate-700 dark:text-slate-400",
-};
 
 const FOLDER_ICONS: Record<string, ReactNode> = {
   Received: <IconInbox className="w-4 h-4 flex-shrink-0" />,
@@ -135,78 +126,11 @@ export default async function AdminPage({
                   </thead>
                   <tbody>
                     {displayed.map((ticket) => (
-                      <tr
+                      <TicketExpandRow
                         key={ticket.id}
-                        className="border-b border-gray-50 dark:border-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700/30 transition-colors"
-                      >
-                        <td className="px-4 py-3 font-mono text-xs text-gray-400 dark:text-slate-500">
-                          {ticket.id.slice(0, 8)}…
-                        </td>
-                        <td className="px-4 py-3 text-sm">
-                          <div className="flex items-center gap-1.5">
-                            {isOverdue(ticket) && (
-                              <IconAlert className="w-3.5 h-3.5 text-orange-500 flex-shrink-0" />
-                            )}
-                            <span className="font-semibold text-brand-dark dark:text-slate-100">
-                              {ticket.customerName}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3 font-mono text-xs text-gray-400 dark:text-slate-500">
-                          {ticket.phone ?? "—"}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-brand-muted dark:text-slate-300">
-                          {ticket.deviceModel}
-                        </td>
-                        <td className="px-4 py-3">
-                          <span className="inline-block px-2 py-0.5 text-xs font-semibold rounded-full bg-brand-subtle dark:bg-slate-700 text-brand-dark dark:text-slate-200">
-                            {ticket.jobType}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3">
-                          <div className="flex flex-col gap-1.5">
-                            <span className={`inline-block px-2.5 py-0.5 text-xs font-semibold rounded-full ${STATUS_BADGE[ticket.status] ?? "bg-gray-100 text-gray-500"}`}>
-                              {STATUS_LABELS[ticket.status] ?? ticket.status}
-                            </span>
-                            <StatusSelect id={ticket.id} current={ticket.status} jobType={ticket.jobType} />
-                          </div>
-                        </td>
-                        <td className="px-4 py-3 text-xs text-gray-400 dark:text-slate-500">
-                          {new Date(ticket.updatedAt).toLocaleDateString("tr-TR", {
-                            month: "short", day: "numeric", hour: "2-digit", minute: "2-digit",
-                            timeZone: "Europe/Istanbul",
-                          })}
-                        </td>
-                        <td className="px-4 py-3">
-                          <div className="flex flex-col gap-1">
-                            <a
-                              href={`/track/${ticket.id}`}
-                              target="_blank"
-                              className="text-xs text-gray-400 dark:text-slate-500 hover:text-brand-dark dark:hover:text-slate-200 underline underline-offset-2 hover:no-underline font-mono transition-colors"
-                            >
-                              /track/{ticket.id.slice(0, 6)}…
-                            </a>
-                            {ticket.termsAccepted ? (
-                              <span className="text-xs text-green-600 dark:text-green-400 font-medium">✓ Onaylandı</span>
-                            ) : (
-                              <span className="text-xs text-gray-300 dark:text-slate-600">Onay bekleniyor</span>
-                            )}
-                          </div>
-                        </td>
-                        <td className="px-4 py-3">
-                          <EditTicketModal
-                            id={ticket.id}
-                            customerName={ticket.customerName}
-                            deviceModel={ticket.deviceModel}
-                            jobType={ticket.jobType}
-                            phone={ticket.phone}
-                            notes={ticket.notes}
-                          />
-                        </td>
-                        <td className="px-4 py-3">
-                          <DeleteTicketButton id={ticket.id} />
-                        </td>
-                      </tr>
+                        ticket={ticket}
+                        isOverdue={isOverdue(ticket)}
+                      />
                     ))}
                   </tbody>
                 </table>
