@@ -159,7 +159,7 @@ export default function TicketExpandRow({ ticket, isOverdue }: Props) {
       {open && (
         <tr className="border-b border-brand-light dark:border-slate-700">
           <td colSpan={10} className="bg-brand-subtle dark:bg-slate-800/80 px-8 py-6">
-            <div className="grid grid-cols-[160px_160px_180px_1fr] gap-8">
+            <div className="grid gap-8" style={{ gridTemplateColumns: "160px 160px 180px 1fr" }}>
 
               {/* Açılalı */}
               <div className="flex flex-col gap-2">
